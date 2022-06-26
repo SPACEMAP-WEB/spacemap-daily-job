@@ -1,1 +1,1 @@
-# SPACEMAP-DAILY-JOB
+# spacemap-daily-job
