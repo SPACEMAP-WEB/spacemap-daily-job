@@ -7,13 +7,13 @@ const { StringHandler } = require('../../library');
  */
 
 class TleHandler {
-  static #isValidId(firstLine) {
+  static #isValidFirstLine(firstLine) {
     const firstLineArray = firstLine.split(/[ \t]+/);
     if (!firstLineArray || firstLineArray.length < 3) {
-      return false;
+      return undefined;
     }
     const stringId = firstLineArray[1].replace('U', '');
-    return StringHandler.isNumeric(stringId);
+    return stringId;
   }
 
   static #isVaild(name, firstLine, secondLine) {
@@ -31,24 +31,38 @@ class TleHandler {
    */
   static parse(date, tlePlainTexts) {
     const tleArray = tlePlainTexts.split(/[\r\n]+/);
-    const tleArrayLength = tleArray.length;
     const tles = [];
+    const newTlePlainTextArray = [];
+    const tleArrayLength = tleArray.length;
+    const uniqueDict = new Map();
     for (let i = 0; i < tleArrayLength; i += 3) {
       const name = tleArray[i].slice(2, tleArray[i].length);
       const firstline = tleArray[i + 1];
       const secondline = tleArray[i + 2];
       if (this.#isVaild(name, firstline, secondline)) {
-        if (this.#isValidId(firstline))
-          tles.push({
-            date: date.obj.toDate(),
-            id: Number(firstline),
-            name,
-            firstline,
-            secondline,
-          });
+        const stringId = this.#isValidFirstLine(firstline);
+        if (stringId && StringHandler.isNumeric(stringId)) {
+          const id = Number(stringId);
+          if (!uniqueDict.get(id)) {
+            uniqueDict.set(id, 10);
+            tles.push({
+              date: date.obj.toDate(),
+              id,
+              name,
+              firstline,
+              secondline,
+            });
+            newTlePlainTextArray.push(
+              `0 ${name}\r\n${firstline}\r\n${secondline}`
+            );
+          }
+        }
       }
     }
-    return tles;
+    return {
+      tles,
+      newTlePlainTexts: newTlePlainTextArray.join(''),
+    };
   }
 }
 

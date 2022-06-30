@@ -23,16 +23,19 @@ class httpRequestHandler {
     });
   }
 
-  /**
-   * @param { String } url
-   * @param { String } body
-   * @returns
-   */
+  static async delete(url) {
+    return promiseRequest({
+      url,
+      method: 'DELETE',
+    });
+  }
+
   static async getLoginCookie(url, body) {
-    const res = this.post(url, body);
+    const res = await httpRequestHandler.post(url, body);
     if (!res) {
       throw new Error('Login request failed.');
     }
+
     const rawCookies = res.headers['set-cookie'];
     if (!rawCookies) {
       throw new Error('Login request failed.');
@@ -47,12 +50,16 @@ class httpRequestHandler {
   }
 
   static async getContentsRequest(url, cookie) {
-    const res = this.get(url, { Cookie: cookie });
+    const res = await this.get(url, { Cookie: cookie });
     if (!res || res.statusCode !== 200) {
       throw new Error('Response status code is not 200. (spacetrack)');
     }
     // TODO: 중복 tle 처리
     return res.body;
+  }
+
+  static fail(res) {
+    return !res || res.statusCode / 100 !== 2;
   }
 }
 

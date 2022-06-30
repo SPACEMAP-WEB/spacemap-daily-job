@@ -9,9 +9,15 @@ class CronScheduler {
     this.taskSchedulers = taskArray.map((task) => {
       const { frequency, handler } = task;
       const dateOfToday = DateHandler.getDateOfToday();
-      return cron.schedule(frequency, handler(dateOfToday), {
-        scheduled: false,
-      });
+      return cron.schedule(
+        frequency,
+        async () => {
+          await handler(dateOfToday);
+        },
+        {
+          scheduled: false,
+        }
+      );
     });
   }
 
