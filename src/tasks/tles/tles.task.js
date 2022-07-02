@@ -26,8 +26,8 @@ class TleTask {
 
   constructor() {
     this.name = 'TLE TASK';
-    // this.frequency = '0 0 0 * * *';
-    this.frequency = '* * * * * *';
+    this.frequency = '0 0 0 * * *';
+    // this.frequency = '* * * * * *';
     this.excuting = false;
     this.handler = this.#tleScheduleHandler.bind(this);
   }

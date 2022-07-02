@@ -16,7 +16,7 @@ const { SendEmailHandler } = require('../../library');
 class PpdbTask {
   constructor() {
     this.name = 'PPDB TASK';
-    this.period = '0 5 23 * * *';
+    this.frequency = '0 5 23 * * *';
     this.excuting = false;
     this.handler = this.#ppdbScheduleHandler.bind(this);
   }
