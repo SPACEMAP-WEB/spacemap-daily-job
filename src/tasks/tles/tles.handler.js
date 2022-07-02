@@ -7,6 +7,10 @@ const { StringHandler } = require('../../library');
  */
 
 class TleHandler {
+  static #idNamePairs = new Map();
+
+  static #setPairsMoreThanOnce = false;
+
   static #isValidFirstLine(firstLine) {
     const firstLineArray = firstLine.split(/[ \t]+/);
     if (!firstLineArray || firstLineArray.length < 3) {
@@ -63,6 +67,21 @@ class TleHandler {
       tles,
       newTlePlainTexts: newTlePlainTextArray.join(''),
     };
+  }
+
+  static async setIdNamePair(tles) {
+    tles.forEach((tle) => {
+      const { id, name } = tle;
+      this.#idNamePairs.set(id, name);
+    });
+    this.#setPairsMoreThanOnce = true;
+  }
+
+  static getNameByUsingId(id) {
+    if (!this.#setPairsMoreThanOnce) {
+      throw new Error('ID-NAME pairs have not set yet.');
+    }
+    return this.#idNamePairs.get(id) || 'UNKNOWN';
   }
 }
 

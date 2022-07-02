@@ -10,6 +10,10 @@ class StringHandler {
   static isValidString(string) {
     return string && string.length > 0;
   }
+
+  static isCommentLine(string) {
+    return this.isValidString(string) && string[0] === '#';
+  }
 }
 
 module.exports = StringHandler;

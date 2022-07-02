@@ -7,7 +7,7 @@ const { httpRequestHandler } = require('../../library');
  */
 
 class TleApiCall {
-  #baseUrl = 'https://platform-api.spacemap42.com/tles';
+  static #baseUrl = 'https://platform-api.spacemap42.com/tles';
 
   /**
    * @param {[Object]} tlePlainTexts
