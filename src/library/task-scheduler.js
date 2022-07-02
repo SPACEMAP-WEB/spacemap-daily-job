@@ -1,6 +1,8 @@
 const cron = require('node-cron');
 const DateHandler = require('./date-handler');
 
+const MODE = process.env.MODE || 'TEST';
+
 class CronScheduler {
   /**
    * @param {[Object]} taskObjs
@@ -12,7 +14,7 @@ class CronScheduler {
       return cron.schedule(
         frequency,
         async () => {
-          await handler(dateOfToday);
+          await handler(dateOfToday, MODE);
         },
         {
           scheduled: false,

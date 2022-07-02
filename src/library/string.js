@@ -11,8 +11,8 @@ class StringHandler {
     return string && string.length > 0;
   }
 
-  static isCommentLine(string) {
-    return this.isValidString(string) && string[0] === '#';
+  static isNotCommentLine(string) {
+    return !(StringHandler.isValidString(string) && string[0] === '#');
   }
 }
 

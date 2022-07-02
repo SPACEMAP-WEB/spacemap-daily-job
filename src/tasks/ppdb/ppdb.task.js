@@ -4,6 +4,7 @@
 
 const PpdbHandler = require('./ppdb.handler');
 const PpdbApiCall = require('./ppdb.call-api');
+const TleHandler = require('../tles/tles.handler');
 const { SendEmailHandler } = require('../../library');
 
 /**
@@ -20,8 +21,8 @@ class PpdbTask {
     this.handler = this.#ppdbScheduleHandler.bind(this);
   }
 
-  async #ppdbScheduleHandler(dateObj) {
-    if (this.excuting) {
+  async #ppdbScheduleHandler(dateObj, MODE) {
+    if (this.excuting || !TleHandler.isPairsSetMoreThanOnce()) {
       return;
     }
     this.excuting = true;
@@ -36,19 +37,27 @@ class PpdbTask {
         ppdbPlainTexts
       );
 
-      // 2. send ppdb plain texts to ec2 server => save on local file
-      await PpdbApiCall.sendPpdbPlainTexts(ppdbPlainTexts);
+      if (MODE === 'TEST') {
+        console.log(ppdbModelArray);
+      } else {
+        // 2. send ppdb plain texts to ec2 server => save on local file
+        await PpdbApiCall.sendPpdbPlainTexts(ppdbPlainTexts);
 
-      // 3. send array of ppdb model to ec2 server
-      //    => ec2 server should delete all existing row.
-      //    => then, save this models.
-      await PpdbApiCall.sendPpdbModel(ppdbModelArray);
+        // 3. send array of ppdb model to ec2 server
+        //    => ec2 server should delete all existing row.
+        //    => then, save this models.
+        await PpdbApiCall.sendPpdbModel(ppdbModelArray);
+      }
       console.log(`Save PPDB at: ${dateObj}`);
     } catch (err) {
-      await SendEmailHandler.sendMail(
-        '[SPACEMAP] ppdb task 에서 에러가 발생하였습니다.',
-        err
-      );
+      if (MODE === 'TEST') {
+        console.log(err);
+      } else {
+        await SendEmailHandler.sendMail(
+          '[SPACEMAP] ppdb task 에서 에러가 발생하였습니다.',
+          err
+        );
+      }
     } finally {
       console.log('ppdb scheduler finish.');
       this.excuting = false;

@@ -6,11 +6,11 @@ const { StringHandler } = require('../../library');
  * @property { moment.Moment } obj
  */
 
+const idNamePairs = new Map();
+
+let setPairsMoreThanOnce = false;
+
 class TleHandler {
-  static #idNamePairs = new Map();
-
-  static #setPairsMoreThanOnce = false;
-
   static #isValidFirstLine(firstLine) {
     const firstLineArray = firstLine.split(/[ \t]+/);
     if (!firstLineArray || firstLineArray.length < 3) {
@@ -72,16 +72,20 @@ class TleHandler {
   static async setIdNamePair(tles) {
     tles.forEach((tle) => {
       const { id, name } = tle;
-      this.#idNamePairs.set(id, name);
+      idNamePairs.set(id, name);
     });
-    this.#setPairsMoreThanOnce = true;
+    setPairsMoreThanOnce = true;
   }
 
   static getNameByUsingId(id) {
-    if (!this.#setPairsMoreThanOnce) {
+    if (!setPairsMoreThanOnce) {
       throw new Error('ID-NAME pairs have not set yet.');
     }
-    return this.#idNamePairs.get(id) || 'UNKNOWN';
+    return idNamePairs.get(id) || 'UNKNOWN';
+  }
+
+  static isPairsSetMoreThanOnce() {
+    return setPairsMoreThanOnce;
   }
 }
 

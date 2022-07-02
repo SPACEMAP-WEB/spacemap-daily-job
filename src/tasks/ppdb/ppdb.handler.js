@@ -7,11 +7,11 @@ const TleHandler = require('../tles/tles.handler');
  * @property { moment.Moment } obj
  */
 
-class PpdbHandler {
-  #FROM_PPDB_PATH = '/data/COOP/workingFolder/PPDB2.txt';
+const FROM_PPDB_PATH = '/data/COOP/workingFolder/PPDB2.txt';
 
+class PpdbHandler {
   static async readPpdbFile() {
-    const ppdbPlainTexts = asyncReadFile(this.#FROM_PPDB_PATH, {
+    const ppdbPlainTexts = await asyncReadFile(FROM_PPDB_PATH, {
       encoding: 'utf-8',
     });
     if (!StringHandler.isValidString(ppdbPlainTexts)) {
@@ -75,7 +75,7 @@ class PpdbHandler {
     const ppdbTextsArray = ppdbPlainTexts.split('\n');
     const ppdbModelArray = await Promise.all(
       ppdbTextsArray
-        .filter(StringHandler.isCommentLine === false)
+        .filter(StringHandler.isNotCommentLine)
         .map(async (ppdbText) => {
           return this.#getPpdbModel(createdAt, ppdbText);
         })
