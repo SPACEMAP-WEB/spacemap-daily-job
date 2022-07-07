@@ -6,9 +6,9 @@ const moment = require('moment');
  * @property { moment.Moment } obj
  */
 
-class DateHandler {
-  static #format = 'YYYY-MM-DD-hh';
+const format = 'YYYY-MM-DD-hh';
 
+class DateHandler {
   static #isValidFormat(momentDate) {
     return momentDate.isValid();
   }
@@ -18,7 +18,7 @@ class DateHandler {
     const today = moment();
     return {
       obj: today,
-      formatString: today.format(this.#format),
+      formatString: today.format(format),
     };
   }
 
@@ -27,7 +27,7 @@ class DateHandler {
    * @returns { undefined | DateObj }
    */
   static getDateOfParam(formatString) {
-    const obj = moment(formatString, this.#format);
+    const obj = moment(formatString, format);
     if (this.#isValidFormat(obj) === false) {
       return undefined;
     }

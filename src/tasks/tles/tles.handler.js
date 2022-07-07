@@ -1,4 +1,4 @@
-const { StringHandler } = require('../../library');
+const { StringHandler, DateHandler } = require('../../library');
 
 /**
  * @typedef DateObj
@@ -29,16 +29,17 @@ class TleHandler {
   }
 
   /**
-   * @param {DateObj} date
+   * @param {DateObj} dateObj
    * @param {String} tlePlainTexts
    * @returns {[Object]}
    */
-  static parse(date, tlePlainTexts) {
+  static parse(dateObj, tlePlainTexts) {
     const tleArray = tlePlainTexts.split(/[\r\n]+/);
     const tles = [];
     const newTlePlainTextArray = [];
     const tleArrayLength = tleArray.length;
     const uniqueDict = new Map();
+    const date = DateHandler.getDateOfParam(dateObj.formatString).obj.toDate();
     for (let i = 0; i < tleArrayLength; i += 3) {
       const name = tleArray[i].slice(2, tleArray[i].length);
       const firstline = tleArray[i + 1];
@@ -50,7 +51,7 @@ class TleHandler {
           if (!uniqueDict.get(id)) {
             uniqueDict.set(id, 10);
             tles.push({
-              date: date.obj.toDate(),
+              date,
               id,
               name,
               firstline,

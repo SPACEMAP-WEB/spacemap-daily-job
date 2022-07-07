@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 
-const TleApiCall = require('./tles.call-api');
+const TleRepository = require('./tles.repository');
 const TleHandler = require('./tles.handler');
 const {
   SendEmailHandler,
@@ -26,8 +26,8 @@ class TleTask {
 
   constructor() {
     this.name = 'TLE TASK';
-    this.frequency = '0 0 0 * * *';
-    // this.frequency = '* * * * * *';
+    // this.frequency = '0 0 0 * * *';
+    this.frequency = '* * * * * *';
     this.excuting = false;
     this.handler = this.#tleScheduleHandler.bind(this);
   }
@@ -44,7 +44,7 @@ class TleTask {
     try {
       // 0. Check if today is tle clean day.
       if (DateHandler.isTleCleanDay()) {
-        // await TleApiCall.deleteAllTle();
+        await TleRepository.deleteAllTle();
       }
 
       // 1. login spacetrack => get Accesstoken
@@ -71,13 +71,12 @@ class TleTask {
       if (MODE === 'TEST') {
         console.log(tles);
       } else {
-        // 5. send Tleplaintexts to ec2 server. => to local file
-        await TleApiCall.sendTleFile(dateObj, newTlePlainTexts);
+        // 5. save Tleplaintexts on S3
+        await TleRepository.saveTleFileOnS3(newTlePlainTexts);
 
-        // 6. send Models to ec2 server. => to DB
-        await TleApiCall.sendTleModels(tles);
+        // 6. save TleModels on DB
+        await TleRepository.saveTleModelsOnDB(tles);
       }
-
       console.log(`Save satellite TLE at : ${dateObj.formatString}`);
     } catch (err) {
       if (MODE === 'TEST') {

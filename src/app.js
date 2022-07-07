@@ -5,7 +5,7 @@ const errorMiddleware = require('./middlewares/error-handler.middleware');
 
 require('dotenv').config();
 
-const PORT = process.env.PORT || 3003;
+const PORT = process.env.PORT || 8080;
 
 class App {
   constructor(controllers) {

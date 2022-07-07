@@ -71,7 +71,9 @@ class PpdbHandler {
    * @param {String} ppdbPlainTexts
    */
   static async getPpdbModelArray(dateObj, ppdbPlainTexts) {
-    const createdAt = dateObj.obj.toDate();
+    const createdAt = DateHandler.getDateOfParam(
+      dateObj.formatString
+    ).obj.toDate();
     const ppdbTextsArray = ppdbPlainTexts.split('\n');
     const ppdbModelArray = await Promise.all(
       ppdbTextsArray

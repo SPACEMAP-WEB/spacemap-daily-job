@@ -12,7 +12,7 @@ class StringHandler {
   }
 
   static isNotCommentLine(string) {
-    return !(StringHandler.isValidString(string) && string[0] === '#');
+    return !(StringHandler.isValidString(string) && string[0] === '%');
   }
 }
 
