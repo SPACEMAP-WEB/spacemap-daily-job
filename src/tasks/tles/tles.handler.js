@@ -75,6 +75,7 @@ class TleHandler {
   }
 
   static async setIdNamePair(tles) {
+    idNamePairs.clear();
     tles.forEach((tle) => {
       const { id, name } = tle;
       idNamePairs.set(id, name);
