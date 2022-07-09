@@ -11,7 +11,7 @@ const main = async () => {
   const app = new App([]);
 
   const tleTask = new TleTask(s3Handler);
-  const ppdbTask = new PpdbTask(s3Handler);
+  const ppdbTask = new PpdbTask();
   const scheduler = new CronScheduler([tleTask, ppdbTask]);
 
   app.listen();
