@@ -1,4 +1,8 @@
-const { StringHandler, DateHandler } = require('../../library');
+const {
+  StringHandler,
+  DateHandler,
+  httpRequestHandler,
+} = require('../../library');
 
 /**
  * @typedef DateObj
@@ -58,7 +62,7 @@ class TleHandler {
               secondline,
             });
             newTlePlainTextArray.push(
-              `0 ${name}\r\n${firstline}\r\n${secondline}`
+              `0 ${name}\r\n${firstline}\r\n${secondline}\r\n`
             );
           }
         }
@@ -78,9 +82,31 @@ class TleHandler {
     setPairsMoreThanOnce = true;
   }
 
-  static getNameByUsingId(id) {
+  static async getNameByUsingId(id) {
     if (!setPairsMoreThanOnce) {
-      throw new Error('ID-NAME pairs have not set yet.');
+      const SPACETRACK_URI = 'https://www.space-track.org';
+
+      const AUTH_URI = 'ajaxauth/login';
+
+      const QUERY_URI =
+        'basicspacedata/query/class/gp/decay_date/null-val/EPOCH/%3Enow-30/MEAN_MOTION/%3E11.25/ECCENTRICITY/%3C0.25/orderby/NORAD_CAT_ID,EPOCH/format/3le';
+
+      const loginCookie = await httpRequestHandler.getLoginCookie(
+        `${SPACETRACK_URI}/${AUTH_URI}`,
+        process.env.SPACETRACK
+      );
+
+      const tlePlainTexts = await httpRequestHandler.getContentsRequest(
+        `${SPACETRACK_URI}/${QUERY_URI}`,
+        loginCookie
+      );
+
+      const { tles } = TleHandler.parse(
+        DateHandler.getDateOfToday(),
+        tlePlainTexts
+      );
+
+      await TleHandler.setIdNamePair(tles);
     }
     return idNamePairs.get(id) || 'UNKNOWN';
   }

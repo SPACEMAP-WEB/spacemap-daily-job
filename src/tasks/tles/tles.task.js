@@ -8,6 +8,7 @@ const {
   SendEmailHandler,
   httpRequestHandler,
   DateHandler,
+  asyncWriteFile,
 } = require('../../library');
 
 /**
@@ -24,12 +25,13 @@ class TleTask {
   #QUERY_URI =
     'basicspacedata/query/class/gp/decay_date/null-val/EPOCH/%3Enow-30/MEAN_MOTION/%3E11.25/ECCENTRICITY/%3C0.25/orderby/NORAD_CAT_ID,EPOCH/format/3le';
 
-  constructor() {
+  constructor(s3Handler) {
     this.name = 'TLE TASK';
-    // this.frequency = '0 0 0 * * *';
-    this.frequency = '* * * * * *';
+    this.frequency = '0 0 0 * * *';
+    // this.frequency = '* * * * * *';
     this.excuting = false;
     this.handler = this.#tleScheduleHandler.bind(this);
+    this.s3Handler = s3Handler;
   }
 
   /**
@@ -68,13 +70,19 @@ class TleTask {
       // 4. update ID-NAME pairs
       await TleHandler.setIdNamePair(tles);
 
-      if (MODE === 'TEST') {
+      if (MODE !== 'TEST') {
         console.log(tles);
       } else {
-        // 5. save Tleplaintexts on S3
-        await TleRepository.saveTleFileOnS3(newTlePlainTexts);
+        const localTleFilePath = `./public/tles/${dateObj.formatString}.tle`;
+        const s3FileName = `${dateObj.formatString}.tle`;
 
-        // 6. save TleModels on DB
+        // 5. save TleFile on local file
+        await asyncWriteFile(localTleFilePath, newTlePlainTexts);
+
+        // 6. save TleFile on S3
+        await this.s3Handler.uploadTleFile(localTleFilePath, s3FileName);
+
+        // 7. save TleModels on DB
         await TleRepository.saveTleModelsOnDB(tles);
       }
       console.log(`Save satellite TLE at : ${dateObj.formatString}`);

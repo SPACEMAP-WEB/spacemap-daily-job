@@ -25,10 +25,6 @@ class TleRepository {
       throw new Error('Delete Tle Error.');
     }
   }
-
-  static async saveTleFileOnS3(tlePlainTexts) {
-    console.log(tlePlainTexts);
-  }
 }
 
 module.exports = TleRepository;

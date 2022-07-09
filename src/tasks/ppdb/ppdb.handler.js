@@ -37,8 +37,8 @@ class PpdbHandler {
       sec,
       probability,
     ] = splitPpdb;
-    const pName = TleHandler.getNameByUsingId(Number(pid));
-    const sName = TleHandler.getNameByUsingId(Number(sid));
+    const pName = await TleHandler.getNameByUsingId(Number(pid));
+    const sName = await TleHandler.getNameByUsingId(Number(sid));
     const { standardTime, tcaTime, tcaStartTime, tcaEndTime } =
       DateHandler.getPpdbTime(
         year,

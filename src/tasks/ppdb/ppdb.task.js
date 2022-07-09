@@ -16,8 +16,8 @@ const { SendEmailHandler } = require('../../library');
 class PpdbTask {
   constructor() {
     this.name = 'PPDB TASK';
-    // this.frequency = '0 5 23 * * *';
-    this.frequency = '* * * * * *';
+    this.frequency = '0 5 23 * * *';
+    // this.frequency = '* * * * * *';
     this.excuting = false;
     this.handler = this.#ppdbScheduleHandler.bind(this);
   }
@@ -41,10 +41,7 @@ class PpdbTask {
       if (MODE === 'TEST') {
         console.log(ppdbModelArray);
       } else {
-        // 2. save ppdb plain files on s3
-        await PpdbRepository.savePpdbFileOnS3(ppdbPlainTexts);
-
-        // 3. save ppdb models on db
+        // 2. save ppdb models on db
         await PpdbRepository.savePpdbModelsOnDB(ppdbModelArray);
         console.log(`Save PPDB at: ${dateObj.formatString}`);
       }

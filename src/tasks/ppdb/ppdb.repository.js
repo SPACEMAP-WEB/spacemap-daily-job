@@ -13,11 +13,39 @@ class PpdbRepository {
     }
   }
 
+  static async #splitArrayIntoEqualChunks(arr, chunkSize) {
+    let firstIdx = 0;
+    const chunkedArr = [];
+    for (let i = 0; i < arr.length; i += 1) {
+      if ((i + 1) % chunkSize === 0) {
+        const innerArr = [];
+        for (let j = firstIdx; j <= i; j += 1) {
+          innerArr.push(arr[j]);
+          firstIdx = i + 1;
+        }
+        chunkedArr.push(innerArr);
+      }
+    }
+    return chunkedArr;
+  }
+
   static async savePpdbModelsOnDB(ppdbModelArray) {
-    this.#deleteAllPpdb();
-    const res = await PpdbModel.insertMany(ppdbModelArray);
-    if (!res || res.length !== ppdbModelArray.length) {
-      throw new Error('Ppdb Insert Error.');
+    await this.#deleteAllPpdb();
+
+    const chunkedPpdbModelArray = await this.#splitArrayIntoEqualChunks(
+      ppdbModelArray,
+      10
+    );
+    const resultArray = await Promise.all(
+      chunkedPpdbModelArray.map(async (ppdbArray) => {
+        const res = await PpdbModel.insertMany(ppdbArray);
+        return res ? res.length : 0;
+      })
+    );
+    const insertedCount = resultArray.reduce((sum, e) => sum + e, 0);
+    if (insertedCount !== ppdbModelArray.length) {
+      await this.#deleteAllPpdb();
+      throw new Error('Save ppdb failed.');
     }
   }
 
