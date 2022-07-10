@@ -14,4 +14,4 @@ const PredictionWindowSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model('predictionwindow', PredictionWindowSchema);
+module.exports = mongoose.model('testpredictionwindow', PredictionWindowSchema);

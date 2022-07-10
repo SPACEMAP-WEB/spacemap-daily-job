@@ -74,9 +74,8 @@ class EventSeqTask {
       // 6. event seq gen
       await EventSeqHandler.execEventSeqGen();
     } catch (err) {
-      if (MODE === 'TEST') {
-        console.log(err);
-      } else {
+      console.log(err);
+      if (MODE !== 'TEST') {
         await SendEmailHandler.sendMail(
           '[SPACEMAP] eventSeq task 에서 에러가 발생하였습니다.',
           err

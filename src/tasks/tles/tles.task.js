@@ -70,7 +70,7 @@ class TleTask {
       // 4. update ID-NAME pairs
       await TleHandler.setIdNamePair(tles);
 
-      if (MODE !== 'TEST') {
+      if (MODE === 'TEST') {
         console.log(tles);
       } else {
         const localTleFilePath = `./public/tles/${dateObj.formatString}.tle`;
@@ -87,13 +87,12 @@ class TleTask {
       }
       console.log(`Save satellite TLE at : ${dateObj.formatString}`);
     } catch (err) {
-      if (MODE === 'TEST') {
-        console.log(err);
-      } else {
-        await SendEmailHandler.sendMail(
-          '[SPACEMAP] tle task 에서 에러가 발생하였습니다.',
-          err
-        );
+      console.log(err);
+      if (MODE !== 'TEST') {
+        // await SendEmailHandler.sendMail(
+        //   '[SPACEMAP] tle task 에서 에러가 발생하였습니다.',
+        //   err
+        // );
       }
     } finally {
       this.excuting = false;

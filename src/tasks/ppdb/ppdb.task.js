@@ -46,13 +46,12 @@ class PpdbTask {
         console.log(`Save PPDB at: ${dateObj.formatString}`);
       }
     } catch (err) {
-      if (MODE === 'TEST') {
-        console.log(err);
-      } else {
-        await SendEmailHandler.sendMail(
-          '[SPACEMAP] ppdb task 에서 에러가 발생하였습니다.',
-          err
-        );
+      console.log(err);
+      if (MODE !== 'TEST') {
+        // await SendEmailHandler.sendMail(
+        //   '[SPACEMAP] ppdb task 에서 에러가 발생하였습니다.',
+        //   err
+        // );
       }
     } finally {
       console.log('ppdb scheduler finish.');
