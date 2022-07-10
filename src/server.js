@@ -1,8 +1,10 @@
 const App = require('./app');
 const { CronScheduler, S3Handler } = require('./library');
 const DataBase = require('./library/database');
+
 const PpdbTask = require('./tasks/ppdb/ppdb.task');
 const TleTask = require('./tasks/tles/tles.task');
+const EventSeqTask = require('./tasks/event-seq/eventSeq.task');
 
 const main = async () => {
   await DataBase.initializeDatabase();
@@ -12,7 +14,8 @@ const main = async () => {
 
   const tleTask = new TleTask(s3Handler);
   const ppdbTask = new PpdbTask();
-  const scheduler = new CronScheduler([tleTask, ppdbTask]);
+  const eventSeqTask = new EventSeqTask();
+  const scheduler = new CronScheduler([tleTask, eventSeqTask, ppdbTask]);
 
   app.listen();
   scheduler.startAllSchedules();

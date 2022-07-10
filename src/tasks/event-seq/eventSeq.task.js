@@ -89,4 +89,5 @@ class EventSeqTask {
     }
   }
 }
+
 module.exports = EventSeqTask;
