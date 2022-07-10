@@ -5,6 +5,7 @@ const DateHandler = require('./date-handler');
 const StringHandler = require('./string');
 const EngineCommand = require('./engine-comand');
 const S3Handler = require('./s3-handler');
+const ShellCommand = require('./shell-command');
 const { asyncReadFile, asyncWriteFile } = require('./async-io');
 
 module.exports = {
@@ -15,6 +16,7 @@ module.exports = {
   StringHandler,
   EngineCommand,
   S3Handler,
+  ShellCommand,
   asyncReadFile,
   asyncWriteFile,
 };

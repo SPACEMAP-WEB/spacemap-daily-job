@@ -27,7 +27,7 @@ class TleTask {
 
   constructor(s3Handler) {
     this.name = 'TLE TASK';
-    this.frequency = '0 0 0 * * *';
+    this.frequency = '0 0 15 * * *';
     // this.frequency = '* * * * * *';
     this.excuting = false;
     this.handler = this.#tleScheduleHandler.bind(this);

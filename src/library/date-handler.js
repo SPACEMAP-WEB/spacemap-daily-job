@@ -23,6 +23,30 @@ class DateHandler {
   }
 
   /**
+   * @param { DateObj } dateObj
+   * @returns { DateObj }
+   */
+  static getDateOfSameHourNextDay(dateObj, day) {
+    const nextDay = dateObj.obj.clone().add(day, 'd').startOf('hour');
+    return {
+      obj: nextDay,
+      formatString: nextDay.format(format),
+    };
+  }
+
+  /**
+   * @param { DateObj } dateObj
+   */
+  static getElementsOfDateObj(dateObj) {
+    return {
+      year: dateObj.obj.year(),
+      month: dateObj.obj.month() + 1,
+      date: dateObj.obj.date(),
+      hour: dateObj.obj.hour(),
+    };
+  }
+
+  /**
    * @param { String } formatString
    * @returns { undefined | DateObj }
    */
@@ -71,6 +95,17 @@ class DateHandler {
       tcaStartTime: tcaStartTime.toDate(),
       tcaEndTime: tcaEndTime.toDate(),
     };
+  }
+
+  static isValidLaunchEpochTime(launchEpochTime, startMoment, endMoment) {
+    return (
+      moment(launchEpochTime).isSameOrAfter(moment(startMoment)) &&
+      moment(launchEpochTime).isSameOrBefore(moment(endMoment))
+    );
+  }
+
+  static getDiffSeconds(launchEpochTime, startMoment) {
+    return moment(launchEpochTime).diff(moment(startMoment), 'seconds');
   }
 }
 
