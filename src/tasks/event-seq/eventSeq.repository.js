@@ -20,14 +20,12 @@ class EventSeqRepository {
     );
   }
 
-  /**
-   * @param { moment.Moment } momentObj
-   */
-  static async setPredictionWindow(momentObj) {
-    await this.#setStartMomentOfPredictionWindow(momentObj.toISOString());
+  static async setPredictionWindow(dateObj) {
+    dateObj.obj.toISOString();
+    await this.#setStartMomentOfPredictionWindow(dateObj.obj.toISOString());
 
-    const endMoment = DateHandler.getDateOfSameHourNextDay(momentObj, 2);
-    await this.#setEndMomentOfPredictionWindow(endMoment.toISOString());
+    const endMoment = DateHandler.getDateOfSameHourNextDay(dateObj, 2);
+    await this.#setEndMomentOfPredictionWindow(endMoment.obj.toISOString());
   }
 
   static async #getStartMomentOfPredictionWindow() {

@@ -16,12 +16,7 @@ class ShellCommand {
   }
 
   static async moveCommand(srcPath, destPath) {
-    shell.mv(srcPath, destPath);
-  }
-
-  static async echoCommand(src, destPath) {
-    const command = `${src} > ${destPath}`;
-    shell.echo('-n', command);
+    shell.cp(srcPath, destPath);
   }
 }
 

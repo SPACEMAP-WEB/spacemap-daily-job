@@ -48,10 +48,10 @@ class PpdbTask {
     } catch (err) {
       console.log(err);
       if (MODE !== 'TEST') {
-        // await SendEmailHandler.sendMail(
-        //   '[SPACEMAP] ppdb task 에서 에러가 발생하였습니다.',
-        //   err
-        // );
+        await SendEmailHandler.sendMail(
+          '[SPACEMAP] ppdb task 에서 에러가 발생하였습니다.',
+          err
+        );
       }
     } finally {
       console.log('ppdb scheduler finish.');

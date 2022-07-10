@@ -5,7 +5,7 @@ class EngineCommand {
 
   static eventSeqDirectory = `${this.homeDirectory}EVENTSEQ`;
 
-  static predictionCommand = `${this.homeDirectory}/Prediction_Command.txt`;
+  static predictionCommand = `${this.homeDirectory}Prediction_Command.txt`;
 
   static maximumCores = 255;
 

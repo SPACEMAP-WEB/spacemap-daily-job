@@ -43,6 +43,10 @@ class TleTask {
     }
     console.log('tle scheduler start.');
     this.excuting = true;
+
+    const localTleFilePath = `./public/tles/${dateObj.formatString}.tle`;
+    const s3FileName = `${dateObj.formatString}.tle`;
+
     try {
       // 0. Check if today is tle clean day.
       if (DateHandler.isTleCleanDay()) {
@@ -70,15 +74,12 @@ class TleTask {
       // 4. update ID-NAME pairs
       await TleHandler.setIdNamePair(tles);
 
+      // 5. save TleFile on local file
+      await asyncWriteFile(localTleFilePath, newTlePlainTexts);
+
       if (MODE === 'TEST') {
         console.log(tles);
       } else {
-        const localTleFilePath = `./public/tles/${dateObj.formatString}.tle`;
-        const s3FileName = `${dateObj.formatString}.tle`;
-
-        // 5. save TleFile on local file
-        await asyncWriteFile(localTleFilePath, newTlePlainTexts);
-
         // 6. save TleFile on S3
         await this.s3Handler.uploadTleFile(localTleFilePath, s3FileName);
 
@@ -89,10 +90,10 @@ class TleTask {
     } catch (err) {
       console.log(err);
       if (MODE !== 'TEST') {
-        // await SendEmailHandler.sendMail(
-        //   '[SPACEMAP] tle task 에서 에러가 발생하였습니다.',
-        //   err
-        // );
+        await SendEmailHandler.sendMail(
+          '[SPACEMAP] tle task 에서 에러가 발생하였습니다.',
+          err
+        );
       }
     } finally {
       this.excuting = false;

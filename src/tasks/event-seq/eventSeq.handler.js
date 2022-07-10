@@ -1,4 +1,8 @@
-const { EngineCommand, ShellCommand } = require('../../library');
+const {
+  EngineCommand,
+  ShellCommand,
+  asyncWriteFile,
+} = require('../../library');
 
 class EventSeqHandler {
   static async removeEventSeq() {
@@ -15,15 +19,12 @@ class EventSeqHandler {
     const moveSrcTle = `${EngineCommand.homeDirectory}*.tle`;
     const moveDestTle = `${EngineCommand.homeDirectory}2022/`;
 
-    const command = `mv -v ${moveSrcPpdb} ${moveDestPpdb} && mv -v ${moveSrcTle} ${moveDestTle}`;
-    return ShellCommand.execCommand(command);
+    await ShellCommand.moveCommand(moveSrcPpdb, moveDestPpdb);
+    await ShellCommand.moveCommand(moveSrcTle, moveDestTle);
   }
 
   static async putPredictionCommand(predictionCommand) {
-    return ShellCommand.echoCommand(
-      predictionCommand,
-      EngineCommand.predictionCommand
-    );
+    return asyncWriteFile(EngineCommand.predictionCommand, predictionCommand);
   }
 
   static async execEventSeqGen() {

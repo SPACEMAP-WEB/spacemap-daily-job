@@ -20,7 +20,8 @@ const EventSeqRepository = require('./eventSeq.repository');
 class EventSeqTask {
   constructor() {
     this.name = 'EVENT TASK';
-    this.period = '0 5 15 * * *';
+    this.frequency = '0 5 15 * * *';
+    // this.frequency = '* * * * * *';
     this.excuting = false;
     this.handler = this.#EventSeqScheduleHandler.bind(this);
   }
@@ -83,8 +84,8 @@ class EventSeqTask {
       }
     } finally {
       await EventSeqRepository.setPredictionWindow(todaySameHourDateObj);
-      console.log('eventseq scheduler finish.');
       this.excuting = false;
+      console.log('eventseq scheduler finish.');
     }
   }
 }
