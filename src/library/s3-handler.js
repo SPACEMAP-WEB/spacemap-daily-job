@@ -1,9 +1,10 @@
-const AWS = require('aws-sdk');
+const S3 = require('aws-sdk/clients/s3');
 const fs = require('fs');
+const { asyncWriteFile } = require('./async-io');
 
 class S3Handler {
   constructor() {
-    this.s3 = new AWS.S3({
+    this.s3 = new S3({
       accessKeyId: process.env.S3_ACCESS_KEY_ID,
       secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
       region: process.env.S3_REGION,
@@ -24,6 +25,45 @@ class S3Handler {
             reject(err);
           } else {
             resolve(data);
+          }
+        }
+      );
+    });
+  }
+
+  async uploadLpdbFile(localLpdbFilePath, s3FileName) {
+    return new Promise((resolve, reject) => {
+      this.s3.upload(
+        {
+          Bucket: 'spacemap',
+          Key: `lca/output/${s3FileName}`,
+          Body: fs.createReadStream(localLpdbFilePath),
+        },
+        {},
+        (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        }
+      );
+    });
+  }
+
+  async downloadTrajectoryFile(localTrajectoryFilePath, s3FileName) {
+    return new Promise((resolve, reject) => {
+      this.s3.getObject(
+        {
+          Bucket: 'spacemap',
+          Key: `lca/input/${s3FileName}`,
+        },
+        async (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            await asyncWriteFile(localTrajectoryFilePath, data.Body.toString);
+            resolve();
           }
         }
       );

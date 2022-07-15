@@ -48,6 +48,10 @@ const LaunchTaskScheme = new Schema({
     type: String,
     required: true,
   },
+  fileName: {
+    type: String,
+    required: true,
+  },
   remoteInputFilePath: {
     type: String,
     required: true,

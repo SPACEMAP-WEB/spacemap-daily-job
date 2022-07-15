@@ -48,16 +48,6 @@ class PpdbRepository {
       throw new Error('Save ppdb failed.');
     }
   }
-
-  static async savePpdbFileOnS3(ppdbPlainTexts) {
-    console.log(ppdbPlainTexts);
-    // const res = await httpRequestHandler.post(`${this.baseUrl}/texts`, {
-    //   ppdbPlainTexts,
-    // });
-    // if (httpRequestHandler.fail(res)) {
-    //   throw new Error('ppdb plain texts post failed.');
-    // }
-  }
 }
 
 module.exports = PpdbRepository;
