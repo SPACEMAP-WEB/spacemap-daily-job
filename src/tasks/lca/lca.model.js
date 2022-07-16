@@ -73,8 +73,8 @@ LaunchTaskScheme.index({ createdAt: -1 });
 
 module.exports = {
   LaunchConjunctionsModel: mongoose.model(
-    'launchConjunctions',
+    'testlaunchConjunctions',
     LaunchConjunctionsScheme
   ),
-  LaunchTaskModel: mongoose.model('launchTasks', LaunchTaskScheme),
+  LaunchTaskModel: mongoose.model('testlaunchTasks', LaunchTaskScheme),
 };

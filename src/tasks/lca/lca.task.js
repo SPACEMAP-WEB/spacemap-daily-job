@@ -14,7 +14,7 @@ class LcaTask {
    */
   constructor(s3handler) {
     this.name = 'LCA TASK';
-    this.frequency = '*/30 * * * * *';
+    this.frequency = '* * * * * *';
     this.mutex = new Mutex();
     this.handler = this.#lcaScheduleHandler.bind(this);
     this.s3handler = s3handler;
@@ -24,6 +24,7 @@ class LcaTask {
     await this.mutex.runExclusive(async () => {
       let taskId = 0;
       try {
+        console.log('lca task scheduler start.');
         /*
          * 0. check the cpu average usage
          *   => can only be calculated when the average cpu usage is less than 10%.
@@ -36,7 +37,7 @@ class LcaTask {
         }
 
         // 1. Pop task object from Database.
-        const task = await this.LcaService.popTaskFromDb();
+        const task = await LcaService.popTaskFromDb();
         if (!task) {
           return;
         }
@@ -87,7 +88,7 @@ class LcaTask {
           );
         }
       } finally {
-        console.log('task scheduler finish.');
+        console.log('lca task scheduler finish.');
       }
     });
   }
