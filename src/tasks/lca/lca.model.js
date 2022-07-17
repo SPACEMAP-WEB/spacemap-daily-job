@@ -48,7 +48,7 @@ const LaunchTaskScheme = new Schema({
     type: String,
     required: true,
   },
-  fileName: {
+  s3InputFileKey: {
     type: String,
     required: true,
   },
@@ -60,7 +60,7 @@ const LaunchTaskScheme = new Schema({
     type: String,
     required: true,
   },
-  localOutputPath: {
+  s3OutputFileKey: {
     type: String,
     required: true,
   },

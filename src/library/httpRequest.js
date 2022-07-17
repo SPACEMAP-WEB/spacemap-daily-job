@@ -51,7 +51,7 @@ class httpRequestHandler {
 
   static async getContentsRequest(url, cookie) {
     const res = await this.get(url, { Cookie: cookie });
-    if (!res || res.statusCode !== 200) {
+    if (this.fail(res)) {
       throw new Error('Response status code is not 200. (spacetrack)');
     }
     // TODO: 중복 tle 처리
@@ -59,7 +59,7 @@ class httpRequestHandler {
   }
 
   static fail(res) {
-    return !res || res.statusCode / 100 !== 2;
+    return !res || res.statusCode !== 200;
   }
 }
 

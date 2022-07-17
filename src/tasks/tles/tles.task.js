@@ -72,7 +72,7 @@ class TleTask {
       );
 
       // 4. update ID-NAME pairs
-      await TleHandler.setIdNamePair(tles);
+      TleHandler.setIdNamePair(tles);
 
       // 5. save TleFile on local file
       await asyncWriteFile(localTleFilePath, newTlePlainTexts);

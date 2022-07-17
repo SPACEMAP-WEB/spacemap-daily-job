@@ -1,5 +1,6 @@
 const S3 = require('aws-sdk/clients/s3');
 const fs = require('fs');
+const path = require('path');
 const { asyncWriteFile } = require('./async-io');
 
 class S3Handler {
@@ -36,7 +37,7 @@ class S3Handler {
       this.s3.upload(
         {
           Bucket: 'spacemap',
-          Key: `lca/output/${s3FileName}`,
+          Key: s3FileName,
           Body: fs.createReadStream(localLpdbFilePath),
         },
         {},
@@ -56,13 +57,17 @@ class S3Handler {
       this.s3.getObject(
         {
           Bucket: 'spacemap',
-          Key: `lca/input/${s3FileName}`,
+          Key: s3FileName,
         },
         async (err, data) => {
           if (err) {
             reject(err);
           } else {
-            await asyncWriteFile(localTrajectoryFilePath, data.Body.toString);
+            const dirname = path.dirname(localTrajectoryFilePath);
+            if (!fs.existsSync(dirname)) {
+              fs.mkdirSync(dirname, { recursive: true });
+            }
+            await asyncWriteFile(localTrajectoryFilePath, data.Body.toString());
             resolve();
           }
         }

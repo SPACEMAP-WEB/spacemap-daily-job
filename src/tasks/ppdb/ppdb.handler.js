@@ -75,6 +75,7 @@ class PpdbHandler {
       dateObj.formatString
     ).obj.toDate();
     const ppdbTextsArray = ppdbPlainTexts.split('\n');
+    await TleHandler.getNameByUsingId(11);
     const ppdbModelArray = await Promise.all(
       ppdbTextsArray
         .filter(StringHandler.isNotCommentLine)

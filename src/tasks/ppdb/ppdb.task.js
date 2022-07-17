@@ -23,7 +23,7 @@ class PpdbTask {
   }
 
   async #ppdbScheduleHandler(dateObj, MODE) {
-    if (this.excuting || !TleHandler.isPairsSetMoreThanOnce()) {
+    if (this.excuting) {
       return;
     }
     this.excuting = true;

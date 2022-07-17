@@ -74,13 +74,13 @@ class TleHandler {
     };
   }
 
-  static async setIdNamePair(tles) {
+  static setIdNamePair(tles) {
     idNamePairs.clear();
+    setPairsMoreThanOnce = true;
     tles.forEach((tle) => {
       const { id, name } = tle;
       idNamePairs.set(id, name);
     });
-    setPairsMoreThanOnce = true;
   }
 
   static async getNameByUsingId(id) {
@@ -107,7 +107,7 @@ class TleHandler {
         tlePlainTexts
       );
 
-      await TleHandler.setIdNamePair(tles);
+      TleHandler.setIdNamePair(tles);
     }
     return idNamePairs.get(id) || 'UNKNOWN';
   }

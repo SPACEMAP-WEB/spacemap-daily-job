@@ -6,13 +6,10 @@ const { LaunchConjunctionsModel, LaunchTaskModel } = require('./lca.model');
 
 class LcaService {
   static async popTaskFromDb() {
-    // const task = await LaunchTaskModel.findOneAndDelete({})
-    //   .sort({ createdAt: 1 })
-    //   .exec();
-    // return task;
-    const task = await LaunchTaskModel.find({}).exec();
-    console.log(task);
-    return undefined;
+    const task = await LaunchTaskModel.findOneAndDelete({})
+      .sort({ createdAt: 1 })
+      .exec();
+    return task;
   }
 
   static async updateTaskStatusSuceess(taskId, lpdbFilePath) {

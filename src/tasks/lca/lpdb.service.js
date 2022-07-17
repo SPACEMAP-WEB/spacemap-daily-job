@@ -10,19 +10,19 @@ class LpdbService {
     const lpdbFilePlainTexts = await asyncReadFile(localLpdbFilePath, {
       encoding: 'utf-8',
     });
-    const createdAt = DateHandler.getDateOfToday();
-    const lpdbModelArray = await PpdbHandler.getPpdbModelArray(
-      createdAt,
+    const createdAtObj = DateHandler.getDateOfToday();
+    const lpdbRawModelArray = await PpdbHandler.getPpdbModelArray(
+      createdAtObj,
       lpdbFilePlainTexts
     );
 
-    lpdbModelArray.forEach((lpdb) => {
-      const { sid } = lpdb;
-      lpdb.createdAt = createdAt;
-      lpdb.placeId = placeId;
-      lpdb.pName = 'Launch Vehicle';
-      lpdb.sName = TleHandler.getNameByUsingId(sid);
-    });
+    const lpdbModelArray = await Promise.all(
+      lpdbRawModelArray.map(async (lpdb) => {
+        lpdb.placeId = placeId;
+        lpdb.pName = 'Launch Vehicle';
+        return lpdb;
+      })
+    );
     await LpdbModel.insertMany(lpdbModelArray);
   }
 }

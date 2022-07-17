@@ -14,7 +14,7 @@ class LcaTask {
    */
   constructor(s3handler) {
     this.name = 'LCA TASK';
-    this.frequency = '* * * * * *';
+    this.frequency = '*/10 * * * * *';
     this.mutex = new Mutex();
     this.handler = this.#lcaScheduleHandler.bind(this);
     this.s3handler = s3handler;
@@ -31,7 +31,7 @@ class LcaTask {
          */
         const { cpu } = osu;
         const cpuUsagePercent = await cpu.usage();
-        if (cpuUsagePercent > 10) {
+        if (cpuUsagePercent > 15) {
           console.log(`cpu usage: ${cpuUsagePercent}%`);
           return;
         }
@@ -41,22 +41,24 @@ class LcaTask {
         if (!task) {
           return;
         }
+        console.log(task);
 
         taskId = task.taskId;
         const {
-          trajectoryFileName,
+          s3InputFileKey,
           remoteInputFilePath,
           remoteOutputFilePath,
           threshold,
-          lpdbFileName,
+          s3OutputFileKey,
         } = task;
         console.log(`Start task ${taskId}.`);
 
         // 2. Get trajectory file from S3 to remote Input Path (not remote for me).
         await this.s3handler.downloadTrajectoryFile(
           remoteInputFilePath,
-          trajectoryFileName
+          s3InputFileKey
         );
+        console.log('trajectory file downloaded');
 
         // 3. Make LPDB From downloaded trajectory.
         await LcaHandler.createLpdbFile(
@@ -64,24 +66,29 @@ class LcaTask {
           remoteOutputFilePath,
           threshold
         );
+        console.log('lpdb created');
 
         // 4. Upload LPDB File On S3.
-        await this.s3handler.uploadLpdbFile(remoteOutputFilePath, lpdbFileName);
+        await this.s3handler.uploadLpdbFile(
+          remoteOutputFilePath,
+          s3OutputFileKey
+        );
+        console.log('lpdb uploaded');
 
         // 5. Save LPDB File On Database.
         await LpdbService.saveLpdbOnDatabase(remoteOutputFilePath, taskId);
 
         // 6. Update Task object status to success.
-        await LcaService.updateTaskStatusSuceess(taskId, lpdbFileName);
+        await LcaService.updateTaskStatusSuceess(taskId, s3OutputFileKey);
         console.log(`Task ${task.taskId} has successfully done.`);
       } catch (err) {
         console.log(err);
+        // 7. If error occured, Update Task object status to fail.
+        await this.launchConjunctionsService.updateTaskStatusFailed(
+          taskId,
+          err
+        );
         if (MODE !== 'TEST') {
-          // 7. If error occured, Update Task object status to fail.
-          await this.launchConjunctionsService.updateTaskStatusFailed(
-            taskId,
-            err
-          );
           await SendEmailHandler.sendMail(
             '[SPACEMAP] ppdb task 에서 에러가 발생하였습니다.',
             err
