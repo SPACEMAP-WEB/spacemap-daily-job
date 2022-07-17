@@ -14,7 +14,7 @@ class LcaTask {
    */
   constructor(s3handler) {
     this.name = 'LCA TASK';
-    this.frequency = '*/10 * * * * *';
+    this.frequency = '*/30 * * * * *';
     this.mutex = new Mutex();
     this.handler = this.#lcaScheduleHandler.bind(this);
     this.s3handler = s3handler;
@@ -58,7 +58,6 @@ class LcaTask {
           remoteInputFilePath,
           s3InputFileKey
         );
-        console.log('trajectory file downloaded');
 
         // 3. Make LPDB From downloaded trajectory.
         await LcaHandler.createLpdbFile(
@@ -66,14 +65,12 @@ class LcaTask {
           remoteOutputFilePath,
           threshold
         );
-        console.log('lpdb created');
 
         // 4. Upload LPDB File On S3.
         await this.s3handler.uploadLpdbFile(
           remoteOutputFilePath,
           s3OutputFileKey
         );
-        console.log('lpdb uploaded');
 
         // 5. Save LPDB File On Database.
         await LpdbService.saveLpdbOnDatabase(remoteOutputFilePath, taskId);
