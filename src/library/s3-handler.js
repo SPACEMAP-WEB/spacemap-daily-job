@@ -17,6 +17,7 @@ class S3Handler {
       this.s3.upload(
         {
           Bucket: 'spacemap',
+          ACL: 'public-read-write',
           Key: `tles/${s3FileName}`,
           Body: fs.createReadStream(localTleFilePath),
         },
@@ -37,6 +38,7 @@ class S3Handler {
       this.s3.upload(
         {
           Bucket: 'spacemap',
+          ACL: 'public-read-write',
           Key: s3FileName,
           Body: fs.createReadStream(localLpdbFilePath),
         },

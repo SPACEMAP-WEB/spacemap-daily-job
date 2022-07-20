@@ -14,7 +14,7 @@ class LcaTask {
    */
   constructor(s3handler) {
     this.name = 'LCA TASK';
-    this.frequency = '*/30 * * * * *';
+    this.frequency = '*/5 * * * * *';
     this.mutex = new Mutex();
     this.handler = this.#lcaScheduleHandler.bind(this);
     this.s3handler = s3handler;

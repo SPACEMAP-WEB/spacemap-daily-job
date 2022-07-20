@@ -49,7 +49,7 @@ const PpdbScheme = new Schema({
   },
 });
 
-const PpdbModel = mongoose.model('testppdb', PpdbScheme);
+const PpdbModel = mongoose.model('ppdb', PpdbScheme);
 PpdbModel.createIndexes({ tcaTime: 1, probability: 1, dca: 1 });
 
 module.exports = PpdbModel;

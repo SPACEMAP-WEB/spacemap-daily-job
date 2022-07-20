@@ -46,4 +46,4 @@ const LpdbScheme = new Schema({
   },
 });
 
-module.exports = mongoose.model('testlpdb', LpdbScheme);
+module.exports = mongoose.model('lpdb', LpdbScheme);
