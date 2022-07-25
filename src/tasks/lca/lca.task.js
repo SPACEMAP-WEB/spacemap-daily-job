@@ -2,6 +2,7 @@
 
 const osu = require('node-os-utils');
 const { Mutex } = require('async-mutex');
+const frequencies = require('../tasks-schedules');
 // eslint-disable-next-line no-unused-vars
 const { SendEmailHandler, S3Handler } = require('../../library');
 const LcaHandler = require('./lca.handler');
@@ -14,7 +15,7 @@ class LcaTask {
    */
   constructor(s3handler) {
     this.name = 'LCA TASK';
-    this.frequency = '*/5 * * * * *';
+    this.frequency = frequencies.lcaFrequency;
     this.mutex = new Mutex();
     this.handler = this.#lcaScheduleHandler.bind(this);
     this.s3handler = s3handler;
@@ -24,7 +25,6 @@ class LcaTask {
     await this.mutex.runExclusive(async () => {
       let taskId = 0;
       try {
-        console.log('lca task scheduler start.');
         /*
          * 0. check the cpu average usage
          *   => can only be calculated when the average cpu usage is less than 10%.
@@ -87,12 +87,10 @@ class LcaTask {
         );
         if (MODE !== 'TEST') {
           await SendEmailHandler.sendMail(
-            '[SPACEMAP] ppdb task 에서 에러가 발생하였습니다.',
+            '[SPACEMAP] lpdb task 에서 에러가 발생하였습니다.',
             err
           );
         }
-      } finally {
-        console.log('lca task scheduler finish.');
       }
     });
   }

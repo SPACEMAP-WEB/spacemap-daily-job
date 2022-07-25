@@ -2,6 +2,8 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 
+const frequencies = require('../tasks-schedules');
+
 const {
   DateHandler,
   EngineCommand,
@@ -20,7 +22,7 @@ const EventSeqRepository = require('./eventSeq.repository');
 class EventSeqTask {
   constructor() {
     this.name = 'EVENT TASK';
-    this.frequency = '0 5 15 * * *';
+    this.frequency = frequencies.eventSeqFrequency;
     // this.frequency = '* * * * * *';
     this.excuting = false;
     this.handler = this.#EventSeqScheduleHandler.bind(this);

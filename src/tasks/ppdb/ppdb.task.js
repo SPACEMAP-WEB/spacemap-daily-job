@@ -2,6 +2,8 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 
+const frequencies = require('../tasks-schedules');
+
 const PpdbHandler = require('./ppdb.handler');
 const PpdbRepository = require('./ppdb.repository');
 const TleHandler = require('../tles/tles.handler');
@@ -16,7 +18,7 @@ const { SendEmailHandler } = require('../../library');
 class PpdbTask {
   constructor() {
     this.name = 'PPDB TASK';
-    this.frequency = '0 5 23 * * *';
+    this.frequency = frequencies.ppdbFrequency;
     // this.frequency = '* * * * * *';
     this.excuting = false;
     this.handler = this.#ppdbScheduleHandler.bind(this);

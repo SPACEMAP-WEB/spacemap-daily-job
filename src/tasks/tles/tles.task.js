@@ -2,6 +2,8 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 
+const frequencies = require('../tasks-schedules');
+
 const TleRepository = require('./tles.repository');
 const TleHandler = require('./tles.handler');
 const {
@@ -27,7 +29,7 @@ class TleTask {
 
   constructor(s3Handler) {
     this.name = 'TLE TASK';
-    this.frequency = '0 0 15 * * *';
+    this.frequency = frequencies.tlesFrequency;
     // this.frequency = '* * * * * *';
     this.excuting = false;
     this.handler = this.#tleScheduleHandler.bind(this);
