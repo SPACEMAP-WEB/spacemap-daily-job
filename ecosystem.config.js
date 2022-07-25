@@ -5,30 +5,30 @@ module.exports = {
       script: './src/server.js',
       instances: 1,
       exec_mode: 'cluster',
-      MODE: 'DEPLOYMENT',
       env: {
         NODE_ENV: 'deployment',
+        MODE: 'DEPLOYMENT',
         SPACEMAP_NODE_ENV: 'deployment',
       },
       env_production: {
         NODE_ENV: 'production',
       },
-      watch: true,
+      watch: false,
     },
     {
       name: 'spacemap-services-tasks',
       script: './src/server.js',
       instances: 1,
       exec_mode: 'cluster',
-      MODE: 'DEPLOYMENT',
       env: {
         NODE_ENV: 'deployment',
+        MODE: 'DEPLOYMENT',
         SPACEMAP_NODE_ENV: 'deployment',
       },
       env_production: {
         NODE_ENV: 'production',
       },
-      watch: true,
+      watch: false,
     },
   ],
 };

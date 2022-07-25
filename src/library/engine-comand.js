@@ -13,8 +13,8 @@ class EngineCommand {
 
   static makePredictionCommandContext(tleFileName, year, month, date, hour) {
     const resolution = 100;
-    // const predictionWindowLength = 172800;
-    const predictionWindowLength = 3600;
+    const predictionWindowLength = 172800;
+    // const predictionWindowLength = 3600;
     const predictionCommandContext = `${this.homeDirectory} ${tleFileName} 0 ${resolution} 1.0e-3 ${predictionWindowLength} ${year} ${month} ${date} ${hour} 0 0`;
     return predictionCommandContext;
   }

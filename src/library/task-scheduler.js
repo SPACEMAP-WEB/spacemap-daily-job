@@ -8,6 +8,7 @@ class CronScheduler {
    * @param {[Object]} taskObjs
    */
   constructor(taskArray) {
+    console.log(process.env.MODE);
     this.taskSchedulers = taskArray.map((task) => {
       const { frequency, handler } = task;
       const dateOfToday = DateHandler.getDateOfToday();
