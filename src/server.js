@@ -7,6 +7,7 @@ const RsosTask = require('./tasks/rsos/rsos.task');
 const EventSeqTask = require('./tasks/event-seq/eventSeq.task');
 const PpdbTask = require('./tasks/ppdb/ppdb.task');
 const LcaTask = require('./tasks/lca/lca.task');
+const WatcherCatcherTask = require('./tasks/watcherCatchers/watcherCatcher.task');
 
 const instanceName = process.env.name || 'UNKNOWN';
 
@@ -21,6 +22,7 @@ const main = async () => {
   const eventSeqTask = new EventSeqTask();
   const ppdbTask = new PpdbTask();
   const lcaTask = new LcaTask(s3Handler);
+  const watcherCatcherTask = new WatcherCatcherTask();
 
   if (instanceName === 'spacemap-daily-tasks') {
     const scheduler = new CronScheduler([
@@ -31,7 +33,7 @@ const main = async () => {
     ]);
     scheduler.startAllSchedules();
   } else if (instanceName === 'spacemap-services-tasks') {
-    const scheduler = new CronScheduler([lcaTask]);
+    const scheduler = new CronScheduler([lcaTask, watcherCatcherTask]);
     scheduler.startAllSchedules();
   }
 

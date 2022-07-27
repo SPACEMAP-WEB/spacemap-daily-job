@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
+// eslint-disable-next-line no-unused-vars
 
 const osu = require('node-os-utils');
 const { Mutex } = require('async-mutex');
 const frequencies = require('../tasks-schedules');
-// eslint-disable-next-line no-unused-vars
-const { SendEmailHandler, S3Handler } = require('../../library');
+const { SendEmailHandler } = require('../../library');
 const LcaHandler = require('./lca.handler');
-const LpdbService = require('./lpdb.service');
-const LcaService = require('./lca.service');
+const LpdbRepository = require('./lpdb.repository');
+const LcaRepository = require('./lca.repository');
 
 class LcaTask {
   /**
@@ -31,17 +31,16 @@ class LcaTask {
          */
         const { cpu } = osu;
         const cpuUsagePercent = await cpu.usage();
-        if (cpuUsagePercent > 15) {
-          console.log(`cpu usage: ${cpuUsagePercent}%`);
+        if (cpuUsagePercent > 10) {
+          // console.log(`cpu usage: ${cpuUsagePercent}%`);
           return;
         }
 
         // 1. Pop task object from Database.
-        const task = await LcaService.popTaskFromDb();
+        const task = await LcaRepository.popTaskFromDb();
         if (!task) {
           return;
         }
-        console.log(task);
 
         taskId = task.taskId;
         const {
@@ -73,18 +72,15 @@ class LcaTask {
         );
 
         // 5. Save LPDB File On Database.
-        await LpdbService.saveLpdbOnDatabase(remoteOutputFilePath, taskId);
+        await LpdbRepository.saveLpdbOnDatabase(remoteOutputFilePath, taskId);
 
         // 6. Update Task object status to success.
-        await LcaService.updateTaskStatusSuceess(taskId, s3OutputFileKey);
+        await LcaRepository.updateTaskStatusSuceess(taskId, s3OutputFileKey);
         console.log(`Task ${task.taskId} has successfully done.`);
       } catch (err) {
         console.log(err);
         // 7. If error occured, Update Task object status to fail.
-        await this.launchConjunctionsService.updateTaskStatusFailed(
-          taskId,
-          err
-        );
+        await LcaRepository.updateTaskStatusFailed(taskId, err);
         if (MODE !== 'TEST') {
           await SendEmailHandler.sendMail(
             '[SPACEMAP] lpdb task 에서 에러가 발생하였습니다.',

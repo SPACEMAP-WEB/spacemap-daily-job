@@ -61,16 +61,16 @@ class EventSeqTask {
     try {
       // 1. update prediction window.
       await EventSeqRepository.setPredictionWindow(todaySameHourDateObj);
-
+      console.log('1 end');
       // 2. remove existing eventSeq
       await EventSeqHandler.removeEventSeq();
-
+      console.log('2 end');
       // 3. backup tle
       await EventSeqHandler.backupTle(ppdbFileName, tleFileName);
-
+      console.log('3 end');
       // 4. put prediction command
       await EventSeqHandler.putPredictionCommand(predictionCommandContext);
-
+      console.log('4 end');
       // 5. move tlefile
       await ShellCommand.moveCommand(tleLocalPath, tleEngineDirPath);
 

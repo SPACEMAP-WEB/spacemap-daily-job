@@ -37,7 +37,7 @@ class App {
         preflightContinue: false,
         credentials: true,
         optionsSuccessStatus: 200,
-      })
+      }),
     );
   }
 

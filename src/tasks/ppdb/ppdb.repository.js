@@ -46,14 +46,11 @@ class PpdbRepository {
       );
       const resultArray = await Promise.all(
         chunkedPpdbModelArray.map(async (ppdbArray) => {
-          console.log(ppdbArray);
           const res = await PpdbModel.insertMany(ppdbArray);
           return res ? res.length : 0;
         })
       );
       const insertedCount = resultArray.reduce((sum, e) => sum + e, 0);
-      console.log(insertedCount);
-      console.log(ppdbModelArray.length);
       if (insertedCount !== ppdbModelArray.length) {
         await this.#deleteAllPpdb();
         throw new Error('Save ppdb failed.');

@@ -32,12 +32,12 @@ class EngineCommand {
   static getLaunchCojunctionsAssessmentCommand(
     inputFilePath,
     outputFilePath,
-    threshold
+    threshold,
   ) {
     return `${this.engine} ${this.predictionCommand} PHANPROP 0 ${this.maximumCores} ${threshold} ${inputFilePath} ${outputFilePath}`;
   }
 
-  static getWatcherCatchersCommand(paramFilePath) {
+  static getWatcherCatcherCommand(paramFilePath) {
     return `${this.engine} ${this.predictionCommand} INTERFERENCE 0 ${this.maximumCores} ${paramFilePath}`;
   }
 }

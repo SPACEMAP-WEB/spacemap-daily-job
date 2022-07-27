@@ -21,11 +21,23 @@ class EventSeqRepository {
   }
 
   static async setPredictionWindow(dateObj) {
-    dateObj.obj.toISOString();
-    await this.#setStartMomentOfPredictionWindow(dateObj.obj.toISOString());
+    await this.#deletePredictionWindow();
+    const endMoment = DateHandler.getDateOfSameHourNextDay(
+      dateObj,
+      2
+    ).obj.toISOString();
+    const startMoment = dateObj.obj.toISOString();
+    await this.#setMomentsOfPredictionWindow(startMoment, endMoment);
+    // await this.#setStartMomentOfPredictionWindow(dateObj.obj.toISOString());
+    // await this.#setEndMomentOfPredictionWindow(endMoment.obj.toISOString());
+  }
 
-    const endMoment = DateHandler.getDateOfSameHourNextDay(dateObj, 2);
-    await this.#setEndMomentOfPredictionWindow(endMoment.obj.toISOString());
+  static async #setMomentsOfPredictionWindow(startMoment, endMoment) {
+    await PredictionWindow.insertMany({ startMoment, endMoment });
+  }
+
+  static async #deletePredictionWindow() {
+    await PredictionWindow.deleteOne();
   }
 
   static async #getStartMomentOfPredictionWindow() {
