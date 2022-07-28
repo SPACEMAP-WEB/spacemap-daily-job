@@ -52,10 +52,10 @@ class CollisionAvoidancesTask {
           remoteOutputFilePath,
         );
 
-        // 3. Make WCDB from parameters file
+        // 3. Make COLADB from parameters file
         await CollisionAvoidancesHandler.createdColadbFile(remoteInputFilePath);
 
-        // 4. Update WCDB
+        // 4. Update COLADB
         await ColadbRepository.saveColadbOnDatabase(
           remoteOutputFilePath,
           taskId,
