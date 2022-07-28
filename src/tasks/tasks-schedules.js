@@ -1,5 +1,6 @@
 const lcaFrequency = '*/5 * * * * *';
 const watcherCatcherFrequency = '*/5 * * * * *';
+const collisionAvoidancesFrequency = '*/5 * * * * *';
 const tlesFrequency = '0 35 12 * * *';
 const rsosFrequency = '0 40 12 * * *';
 const eventSeqFrequency = '0 45 12 * * *';
