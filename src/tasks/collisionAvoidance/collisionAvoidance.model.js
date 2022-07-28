@@ -25,11 +25,11 @@ const CollisionAvoidanceScheme = new Schema({
     required: true,
   },
   startMomentOfCola: {
-    type: Date,
+    type: Number,
     required: true,
   },
   endMomentOfCola: {
-    type: Date,
+    type: Number,
     required: true,
   },
   amoutOfLevel: {
@@ -104,5 +104,5 @@ module.exports = {
     'collisionAvoidance',
     CollisionAvoidanceScheme,
   ),
-  ColaTaskModel: mongoose.model('colaTasks', ColaTaskScheme),
+  ColaTaskModel: mongoose.model('colaTask', ColaTaskScheme),
 };
