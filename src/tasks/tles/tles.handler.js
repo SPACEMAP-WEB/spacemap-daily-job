@@ -62,7 +62,7 @@ class TleHandler {
               secondline,
             });
             newTlePlainTextArray.push(
-              `0 ${name}\r\n${firstline}\r\n${secondline}\r\n`
+              `0 ${name}\r\n${firstline}\r\n${secondline}\r\n`,
             );
           }
         }
@@ -94,17 +94,17 @@ class TleHandler {
 
       const loginCookie = await httpRequestHandler.getLoginCookie(
         `${SPACETRACK_URI}/${AUTH_URI}`,
-        process.env.SPACETRACK
+        process.env.SPACETRACK,
       );
 
       const tlePlainTexts = await httpRequestHandler.getContentsRequest(
         `${SPACETRACK_URI}/${QUERY_URI}`,
-        loginCookie
+        loginCookie,
       );
 
       const { tles } = TleHandler.parse(
         DateHandler.getDateOfToday(),
-        tlePlainTexts
+        tlePlainTexts,
       );
 
       TleHandler.setIdNamePair(tles);

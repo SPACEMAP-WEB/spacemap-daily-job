@@ -41,13 +41,13 @@ class RsosTask {
       // 1. login spacetrack => get Accesstoken
       const loginCookie = await httpRequestHandler.getLoginCookie(
         `${this.#SPACETRACK_URI}/${this.#AUTH_URI}`,
-        process.env.SPACETRACK
+        process.env.SPACETRACK,
       );
 
       // 2. get plain texts from spacetrack.
       const rsoParamsPlainText = await httpRequestHandler.getContentsRequest(
         `${this.#SPACETRACK_URI}/${this.#QUERY_URI}`,
-        loginCookie
+        loginCookie,
       );
 
       // 3. parse tleplaintexts
@@ -61,7 +61,7 @@ class RsosTask {
       if (MODE !== 'TEST') {
         await SendEmailHandler.sendMail(
           '[SPACEMAP] rso-params task 에서 에러가 발생하였습니다.',
-          err
+          err,
         );
       }
     } finally {

@@ -46,7 +46,7 @@ class EventSeqTask {
     const tleEngineDirPath = `${EngineCommand.homeDirectory}${tleFileName}`;
     const todaySameHourDateObj = DateHandler.getDateOfSameHourNextDay(
       dateObj,
-      0
+      0,
     );
     const { year, month, date, hour } =
       DateHandler.getElementsOfDateObj(todaySameHourDateObj);
@@ -55,7 +55,7 @@ class EventSeqTask {
       year,
       month,
       date,
-      hour
+      hour,
     );
 
     try {
@@ -81,7 +81,7 @@ class EventSeqTask {
       if (MODE !== 'TEST') {
         await SendEmailHandler.sendMail(
           '[SPACEMAP] eventSeq task 에서 에러가 발생하였습니다.',
-          err
+          err,
         );
       }
     } finally {

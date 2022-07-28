@@ -19,7 +19,7 @@ class CronScheduler {
         },
         {
           scheduled: false,
-        }
+        },
       );
     });
   }

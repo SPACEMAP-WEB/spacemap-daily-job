@@ -19,7 +19,7 @@ class RsosRepository {
       await RsosModel.findOneAndUpdate(
         { id },
         { id, objtype, objectname, rcssize, country },
-        options
+        options,
       );
     });
     await Promise.all(updateResult);

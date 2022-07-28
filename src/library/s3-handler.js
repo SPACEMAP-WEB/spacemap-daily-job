@@ -28,7 +28,7 @@ class S3Handler {
           } else {
             resolve(data);
           }
-        }
+        },
       );
     });
   }
@@ -49,7 +49,7 @@ class S3Handler {
           } else {
             resolve(data);
           }
-        }
+        },
       );
     });
   }
@@ -72,7 +72,7 @@ class S3Handler {
             await asyncWriteFile(localTrajectoryFilePath, data.Body.toString());
             resolve();
           }
-        }
+        },
       );
     });
   }

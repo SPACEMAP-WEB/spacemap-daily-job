@@ -4,12 +4,12 @@ class LcaHandler {
   static async createLpdbFile(
     remoteInputFilePath,
     remoteOutputFilePath,
-    threshold
+    threshold,
   ) {
     const command = EngineCommand.getLaunchCojunctionsAssessmentCommand(
       remoteInputFilePath,
       remoteOutputFilePath,
-      threshold
+      threshold,
     );
     return ShellCommand.execCommand(command);
   }
