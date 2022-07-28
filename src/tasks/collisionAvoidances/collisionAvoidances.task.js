@@ -6,12 +6,12 @@ const osu = require('node-os-utils');
 const { Mutex } = require('async-mutex');
 const frequencies = require('../tasks-schedules');
 const CollisionAvoidancesRepository = require('./collisionAvoidances.repository');
-const WcdbRepository = require('./wcdb.repository');
+const ColadbRepository = require('./coladb.repository');
 const CollisionAvoidancesHandler = require('./collisionAvoidances.handler');
 
 class CollisionAvoidancesTask {
   constructor() {
-    this.name = 'WC TASK';
+    this.name = 'COLA TASK';
     this.frequency = frequencies.collisionAvoidancesFrequency;
     this.mutex = new Mutex();
     this.handler = this.#collisionAvoidancesScheduleHandler.bind(this);
@@ -53,10 +53,13 @@ class CollisionAvoidancesTask {
         );
 
         // 3. Make WCDB from parameters file
-        await CollisionAvoidancesHandler.createdWcdbFile(remoteInputFilePath);
+        await CollisionAvoidancesHandler.createdColadbFile(remoteInputFilePath);
 
         // 4. Update WCDB
-        await WcdbRepository.saveWcdbOnDatabase(remoteOutputFilePath, taskId);
+        await ColadbRepository.saveColadbOnDatabase(
+          remoteOutputFilePath,
+          taskId,
+        );
         await CollisionAvoidancesRepository.updateTaskStatusSuceess(
           taskId,
           remoteOutputFilePath,
