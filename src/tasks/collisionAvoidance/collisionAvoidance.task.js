@@ -38,7 +38,7 @@ class CollisionAvoidanceTask {
           return;
         }
         taskId = task.taskId;
-        const { remoteInputFilePath, remoteOutputFilePath } = task;
+        const { remoteInputFileListPath, remoteOutputFilePath } = task;
         console.log(`end 1: ${taskId}`);
 
         // 2. Write parameters file into working directory.
@@ -58,8 +58,12 @@ class CollisionAvoidanceTask {
         //  (output: offset trajectories)
 
         // 4. Make COLADB from parameters file
-        await CollisionAvoidanceHandler.createdColadbFile(remoteInputFilePath);
-        // 비워둬...
+        await CollisionAvoidanceHandler.createdColadbFile(
+          remoteInputFileListPath,
+          remoteOutputFilePath,
+          parameters.threshold,
+        );
+        // Complete
 
         // 5. Update COLADB
         await ColadbRepository.saveColadbOnDatabase(

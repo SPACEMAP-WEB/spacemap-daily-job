@@ -79,8 +79,12 @@ const ColaTaskScheme = new Schema({
     type: [String],
     required: true,
   },
-  remoteInputFilePath: {
+  remoteInputFliePath: {
     type: [String],
+    required: true,
+  },
+  remoteInputFileListPath: {
+    type: String,
     required: true,
   },
   remoteOutputFilePath: {

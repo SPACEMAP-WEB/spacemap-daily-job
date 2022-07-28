@@ -40,6 +40,15 @@ class EngineCommand {
   static getWatcherCatcherCommand(paramFilePath) {
     return `${this.engine} ${this.predictionCommand} INTERFERENCE 0 ${this.maximumCores} ${paramFilePath}`;
   }
+
+  static getCollisionAvoidanceCommand(
+    inputFileListPath,
+    outputFilePath,
+    threshold,
+  ) {
+    return `${this.engine}   ${this.predictionCommand} PHANPROP2 0 ${this.maximumCores} ${threshold} ${inputFileListPath} ${outputFilePath}`;
+    // "args": ["Prediction_Command.txt", "PHANPROP2", "0", "256", "100", "/data/COOP/launchTrajectory/trajectory.lst", "output_launch_trajectory_NEW_ORBITTOOLS.txt"],
+  }
 }
 
 module.exports = EngineCommand;
