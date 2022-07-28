@@ -50,7 +50,6 @@ const CollisionAvoidancesScheme = new Schema({
   },
   candidatedPaths: {
     type: [String],
-    required: false,
   },
   status: {
     type: String,
