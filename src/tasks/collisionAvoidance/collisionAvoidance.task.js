@@ -46,16 +46,22 @@ class CollisionAvoidanceTask {
           await CollisionAvoidanceRepository.getParametersFromCollisionAvoidanceByTaskId(
             taskId,
           );
-        await CollisionAvoidanceHandler.writeParameters(
-          parameters,
-          remoteInputFilePath,
-          remoteOutputFilePath,
-        );
 
-        // 3. Make COLADB from parameters file
+        // 3. Make candidated paths
+        await CollisionAvoidanceHandler.writeOriginalPath();
+        // a) get tle of primary RSO from platform-api (output: tle of primary RSO)
+        // b) make original path of primary RSO
+        //  (input:  tle, prameters)
+        //  (output: trajectory of original primary RSO & write in local)
+        // c) make candidates path
+        //  (input:  original path)
+        //  (output: offset trajectories)
+
+        // 4. Make COLADB from parameters file
         await CollisionAvoidanceHandler.createdColadbFile(remoteInputFilePath);
+        // 비워둬...
 
-        // 4. Update COLADB
+        // 5. Update COLADB
         await ColadbRepository.saveColadbOnDatabase(
           remoteOutputFilePath,
           taskId,
