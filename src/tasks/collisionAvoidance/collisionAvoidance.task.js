@@ -5,19 +5,19 @@
 const osu = require('node-os-utils');
 const { Mutex } = require('async-mutex');
 const frequencies = require('../tasks-schedules');
-const CollisionAvoidancesRepository = require('./collisionAvoidances.repository');
+const CollisionAvoidanceRepository = require('./collisionAvoidance.repository');
 const ColadbRepository = require('./coladb.repository');
-const CollisionAvoidancesHandler = require('./collisionAvoidances.handler');
+const CollisionAvoidanceHandler = require('./collisionAvoidance.handler');
 
-class CollisionAvoidancesTask {
+class CollisionAvoidanceTask {
   constructor() {
     this.name = 'COLA TASK';
-    this.frequency = frequencies.collisionAvoidancesFrequency;
+    this.frequency = frequencies.collisionAvoidanceFrequency;
     this.mutex = new Mutex();
-    this.handler = this.#collisionAvoidancesScheduleHandler.bind(this);
+    this.handler = this.#collisionAvoidanceScheduleHandler.bind(this);
   }
 
-  async #collisionAvoidancesScheduleHandler() {
+  async #collisionAvoidanceScheduleHandler() {
     let taskId = 0;
     await this.mutex.runExclusive(async () => {
       try {
@@ -33,7 +33,7 @@ class CollisionAvoidancesTask {
         }
 
         // 1. Pop task object from Database.
-        const task = await CollisionAvoidancesRepository.popTaskFromDb();
+        const task = await CollisionAvoidanceRepository.popTaskFromDb();
         if (!task) {
           return;
         }
@@ -43,34 +43,34 @@ class CollisionAvoidancesTask {
 
         // 2. Write parameters file into working directory.
         const parameters =
-          await CollisionAvoidancesRepository.getParametersFromCollisionAvoidancesByTaskId(
+          await CollisionAvoidanceRepository.getParametersFromCollisionAvoidanceByTaskId(
             taskId,
           );
-        await CollisionAvoidancesHandler.writeParameters(
+        await CollisionAvoidanceHandler.writeParameters(
           parameters,
           remoteInputFilePath,
           remoteOutputFilePath,
         );
 
         // 3. Make COLADB from parameters file
-        await CollisionAvoidancesHandler.createdColadbFile(remoteInputFilePath);
+        await CollisionAvoidanceHandler.createdColadbFile(remoteInputFilePath);
 
         // 4. Update COLADB
         await ColadbRepository.saveColadbOnDatabase(
           remoteOutputFilePath,
           taskId,
         );
-        await CollisionAvoidancesRepository.updateTaskStatusSuceess(
+        await CollisionAvoidanceRepository.updateTaskStatusSuceess(
           taskId,
           remoteOutputFilePath,
         );
         console.log(`Task ${taskId} has Successfully Done.`);
       } catch (err) {
         console.log(`Task ${taskId} has not done : ${err}`);
-        await CollisionAvoidancesRepository.updateTaskStatusFailed(taskId, err);
+        await CollisionAvoidanceRepository.updateTaskStatusFailed(taskId, err);
       }
     });
   }
 }
 
-module.exports = CollisionAvoidancesTask;
+module.exports = CollisionAvoidanceTask;
