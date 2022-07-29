@@ -10,11 +10,16 @@ const ColadbRepository = require('./coladb.repository');
 const CollisionAvoidanceHandler = require('./collisionAvoidance.handler');
 
 class CollisionAvoidanceTask {
-  constructor() {
+  /**
+   * @param {S3Handler} s3handler
+   */
+  constructor(s3handler) {
     this.name = 'COLA TASK';
     this.frequency = frequencies.collisionAvoidanceFrequency;
     this.mutex = new Mutex();
     this.handler = this.#collisionAvoidanceScheduleHandler.bind(this);
+    this.s3handler = s3handler;
+    // this.#collisionAvoidanceScheduleHandler();
   }
 
   async #collisionAvoidanceScheduleHandler() {
@@ -38,7 +43,14 @@ class CollisionAvoidanceTask {
           return;
         }
         taskId = task.taskId;
-        const { remoteInputFileListPath, remoteOutputFilePath } = task;
+        const {
+          remoteInputFilePath,
+          remoteInputFileListPath,
+          remoteInputFilePrefix,
+          remoteOutputFilePath,
+          s3InputFileKey,
+          s3OutputFileKey,
+        } = task;
         console.log(`end 1: ${taskId}`);
 
         // 2. Write parameters file into working directory.
@@ -48,7 +60,10 @@ class CollisionAvoidanceTask {
           );
 
         // 3. Make candidated paths
-        await CollisionAvoidanceHandler.writeOriginalPath();
+        await CollisionAvoidanceHandler.writePaths(
+          parameters,
+          remoteInputFilePrefix,
+        );
         // a) get tle of primary RSO from platform-api (output: tle of primary RSO)
         // b) make original path of primary RSO
         //  (input:  tle, prameters)
@@ -65,7 +80,20 @@ class CollisionAvoidanceTask {
         );
         // Complete
 
-        // 5. Update COLADB
+        // 5-1. Upload Trajectory Files (Original + Candidated) On S3.
+        await Promise.all(
+          [...Array(parameters.numberOfPaths + 1).keys()].map(async (index) => {
+            console.log(index);
+            await this.s3handler.uploadFile(
+              remoteInputFilePath[index],
+              s3InputFileKey[index],
+            );
+          }),
+        );
+        // 5-2. Upload COLADB File On S3.
+        await this.s3handler.uploadFile(remoteOutputFilePath, s3OutputFileKey);
+
+        // 6. Update COLADB
         await ColadbRepository.saveColadbOnDatabase(
           remoteOutputFilePath,
           taskId,

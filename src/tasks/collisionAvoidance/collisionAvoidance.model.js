@@ -24,6 +24,14 @@ const CollisionAvoidanceScheme = new Schema({
     type: Number,
     required: true,
   },
+  firstLineOfPrimary: {
+    type: String,
+    required: true,
+  },
+  secondLineOfPrimary: {
+    type: String,
+    required: true,
+  },
   startMomentOfCola: {
     type: Number,
     required: true,
@@ -32,7 +40,7 @@ const CollisionAvoidanceScheme = new Schema({
     type: Number,
     required: true,
   },
-  amoutOfLevel: {
+  amountOfLevel: {
     type: Number,
     required: true,
   },
@@ -79,11 +87,15 @@ const ColaTaskScheme = new Schema({
     type: [String],
     required: true,
   },
-  remoteInputFliePath: {
+  remoteInputFilePath: {
     type: [String],
     required: true,
   },
   remoteInputFileListPath: {
+    type: String,
+    required: true,
+  },
+  remoteInputFilePrefix: {
     type: String,
     required: true,
   },
@@ -104,5 +116,5 @@ module.exports = {
     'collisionAvoidance',
     CollisionAvoidanceScheme,
   ),
-  ColaTaskModel: mongoose.model('colaTask', ColaTaskScheme),
+  ColaTaskModel: mongoose.model('colaTasks', ColaTaskScheme),
 };

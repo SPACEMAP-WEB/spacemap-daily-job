@@ -41,6 +41,19 @@ class EngineCommand {
     return `${this.engine} ${this.predictionCommand} INTERFERENCE 0 ${this.maximumCores} ${paramFilePath}`;
   }
 
+  static getCandidatedPathsCommand(
+    firstLine,
+    secondLine,
+    predictionEpochTime,
+    startMomentOfCola,
+    endMomentOfCola,
+    amountOfLevel,
+    numberOfPaths,
+    filePrefix,
+  ) {
+    return `python3 spacemap-assistant-tool/tle2offset_path.py "${firstLine}" "${secondLine}" ${predictionEpochTime} ${startMomentOfCola} ${endMomentOfCola} ${amountOfLevel} ${numberOfPaths} ${filePrefix}`;
+  }
+
   static getCollisionAvoidanceCommand(
     inputFileListPath,
     outputFilePath,
