@@ -44,8 +44,8 @@ class TleTask {
       return;
     }
     console.log('tle scheduler start.');
+    console.log(dateObj);
     this.excuting = true;
-
     const localTleFilePath = `./public/tles/${dateObj.formatString}.tle`;
     const s3FileName = `${dateObj.formatString}.tle`;
 
