@@ -27,12 +27,10 @@ const main = async () => {
   const collisionAvoidanceTask = new CollisionAvoidanceTask(s3Handler);
 
   if (instanceName === 'spacemap-daily-tasks') {
-    const scheduler = new CronScheduler([
-      tleTask,
-      rsosTask,
-      eventSeqTask,
-      ppdbTask,
-    ]);
+    const scheduler = new CronScheduler([tleTask, eventSeqTask]);
+    scheduler.startAllSchedules();
+  } else if (instanceName === 'spacemap-db-tasks') {
+    const scheduler = new CronScheduler([rsosTask, ppdbTask]);
     scheduler.startAllSchedules();
   } else if (instanceName === 'spacemap-services-tasks') {
     const scheduler = new CronScheduler([

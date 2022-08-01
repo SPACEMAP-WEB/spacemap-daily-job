@@ -11,11 +11,10 @@ class CronScheduler {
     console.log(process.env.MODE);
     this.taskSchedulers = taskArray.map((task) => {
       const { frequency, handler } = task;
-      const dateOfToday = DateHandler.getDateOfToday();
       return cron.schedule(
         frequency,
         async () => {
-          await handler(dateOfToday, MODE);
+          await handler(DateHandler.getDateOfToday(), MODE);
         },
         {
           scheduled: false,
