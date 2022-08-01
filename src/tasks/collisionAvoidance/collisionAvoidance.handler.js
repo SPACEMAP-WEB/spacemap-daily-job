@@ -39,7 +39,7 @@ class CollisionAvoidanceHandler {
       remoteInputFilePrefix,
     );
 
-    return ShellCommand.execCommand(command);
+    return ShellCommand.execCommandWithoutChekingError(command);
   }
 
   static async createdColadbFile(

@@ -5,7 +5,12 @@ const { asyncReadFile, DateHandler } = require('../../library');
 const ColadbModel = require('./coladb.model');
 
 class ColadbService {
-  static async saveColadbOnDatabase(coladbPath, placeId) {
+  static async saveColadbOnDatabase(
+    coladbPath,
+    placeId,
+    originalPid,
+    originalSid,
+  ) {
     const coladbFilePlainTexts = await asyncReadFile(coladbPath, {
       encoding: 'utf-8',
     });
@@ -16,11 +21,17 @@ class ColadbService {
     );
 
     const coladbModelArray = await Promise.all(
-      coladbRawModelArray.map(async (coladb) => {
-        coladb.placeId = placeId;
-        coladb.pName = 'Site';
-        return coladb;
-      }),
+      coladbRawModelArray
+        .filter(
+          /* eslint-disable-next-line eqeqeq */
+          (coladb) => coladb.sid != originalPid && coladb.sid != originalSid,
+        )
+        .map(async (coladb) => {
+          coladb.placeId = placeId;
+          coladb.pName =
+            coladb.pid < 0 ? `candidate${-coladb.pid}` : `original`;
+          return coladb;
+        }),
     );
 
     await ColadbModel.insertMany(coladbModelArray);

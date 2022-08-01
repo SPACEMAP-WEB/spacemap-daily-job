@@ -75,6 +75,14 @@ class S3Handler {
     });
   }
 
+  async uploadFiles(localFilePaths, s3FileNames) {
+    return Promise.all(
+      localFilePaths.map(async (_, index) => {
+        return this.uploadFile(localFilePaths[index], s3FileNames[index]);
+      }),
+    );
+  }
+
   async downloadTrajectoryFile(localTrajectoryFilePath, s3FileName) {
     return new Promise((resolve, reject) => {
       this.s3.getObject(

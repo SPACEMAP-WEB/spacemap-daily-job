@@ -19,7 +19,6 @@ class CollisionAvoidanceTask {
     this.mutex = new Mutex();
     this.handler = this.#collisionAvoidanceScheduleHandler.bind(this);
     this.s3handler = s3handler;
-    // this.#collisionAvoidanceScheduleHandler();
   }
 
   async #collisionAvoidanceScheduleHandler() {
@@ -80,23 +79,21 @@ class CollisionAvoidanceTask {
         );
         // Complete
 
-        // 5-1. Upload Trajectory Files (Original + Candidated) On S3.
-        await Promise.all(
-          [...Array(parameters.numberOfPaths + 1).keys()].map(async (index) => {
-            console.log(index);
-            await this.s3handler.uploadFile(
-              remoteInputFilePath[index],
-              s3InputFileKey[index],
-            );
-          }),
+        // 5-1. Upload trajectory files on s3.
+        const s3urls = await this.s3handler.uploadFiles(
+          remoteInputFilePath,
+          s3InputFileKey,
         );
-        // 5-2. Upload COLADB File On S3.
+        CollisionAvoidanceRepository.updateCandidatedPaths(taskId, s3urls);
+        // 5-2. Upload COLADB file on s3.
         await this.s3handler.uploadFile(remoteOutputFilePath, s3OutputFileKey);
 
         // 6. Update COLADB
         await ColadbRepository.saveColadbOnDatabase(
           remoteOutputFilePath,
           taskId,
+          parameters.pidOfConjunction,
+          parameters.sidOfConjunction,
         );
         await CollisionAvoidanceRepository.updateTaskStatusSuceess(
           taskId,
