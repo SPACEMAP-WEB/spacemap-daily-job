@@ -75,13 +75,13 @@ class DateHandler {
     sec,
     tca,
     tcaStart,
-    tcaEnd
+    tcaEnd,
   ) {
     const standardTime = moment(
       `${year}-${month}-${date}T${hours}:${min}:${
         sec >= 60.0 ? sec - 0.001 : sec
       }Z`,
-      'YYYY-MM-DDTHH:mm:ss.SSSSZ'
+      'YYYY-MM-DDTHH:mm:ss.SSSSZ',
     );
     const diffTcaStart = tcaStart > tca ? tcaStart - tcaStart : tcaStart - tca;
     const diffTcaEnd = tcaEnd < tca ? tcaEnd - tcaEnd : tcaEnd - tca;

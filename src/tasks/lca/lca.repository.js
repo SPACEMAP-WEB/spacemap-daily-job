@@ -4,7 +4,7 @@
 const { default: mongoose } = require('mongoose');
 const { LaunchConjunctionsModel, LaunchTaskModel } = require('./lca.model');
 
-class LcaService {
+class LcaRepository {
   static async popTaskFromDb() {
     const task = await LaunchTaskModel.findOneAndDelete({})
       .sort({ createdAt: 1 })
@@ -15,7 +15,7 @@ class LcaService {
   static async updateTaskStatusSuceess(taskId, lpdbFilePath) {
     return LaunchConjunctionsModel.findOneAndUpdate(
       { _id: mongoose.Types.ObjectId(taskId) },
-      { status: 'DONE', lpdbFilePath }
+      { status: 'DONE', lpdbFilePath },
     );
   }
 
@@ -23,11 +23,11 @@ class LcaService {
     if (taskId !== 0) {
       return LaunchConjunctionsModel.findOneAndUpdate(
         { _id: mongoose.Types.ObjectId(taskId) },
-        { status: 'ERROR', errorMessage }
+        { status: 'ERROR', errorMessage },
       );
     }
     return undefined;
   }
 }
 
-module.exports = LcaService;
+module.exports = LcaRepository;

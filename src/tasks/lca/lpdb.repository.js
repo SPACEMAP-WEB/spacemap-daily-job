@@ -13,7 +13,7 @@ class LpdbService {
     const createdAtObj = DateHandler.getDateOfToday();
     const lpdbRawModelArray = await PpdbHandler.getPpdbModelArray(
       createdAtObj,
-      lpdbFilePlainTexts
+      lpdbFilePlainTexts,
     );
 
     const lpdbModelArray = await Promise.all(
@@ -21,7 +21,7 @@ class LpdbService {
         lpdb.placeId = placeId;
         lpdb.pName = 'Launch Vehicle';
         return lpdb;
-      })
+      }),
     );
     await LpdbModel.insertMany(lpdbModelArray);
   }

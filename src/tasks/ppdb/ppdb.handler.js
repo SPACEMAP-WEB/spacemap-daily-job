@@ -49,7 +49,7 @@ class PpdbHandler {
         sec,
         tca,
         tcaStart,
-        tcaEnd
+        tcaEnd,
       );
     return {
       createdAt,
@@ -72,7 +72,7 @@ class PpdbHandler {
    */
   static async getPpdbModelArray(dateObj, ppdbPlainTexts) {
     const createdAt = DateHandler.getDateOfParam(
-      dateObj.formatString
+      dateObj.formatString,
     ).obj.toDate();
     const ppdbTextsArray = ppdbPlainTexts.split('\n');
     await TleHandler.getNameByUsingId(11);
@@ -81,7 +81,7 @@ class PpdbHandler {
         .filter(StringHandler.isNotCommentLine)
         .map(async (ppdbText) => {
           return this.#getPpdbModel(createdAt, ppdbText);
-        })
+        }),
     );
     return ppdbModelArray;
   }

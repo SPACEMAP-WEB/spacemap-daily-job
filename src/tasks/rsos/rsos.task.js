@@ -41,27 +41,30 @@ class RsosTask {
       // 1. login spacetrack => get Accesstoken
       const loginCookie = await httpRequestHandler.getLoginCookie(
         `${this.#SPACETRACK_URI}/${this.#AUTH_URI}`,
-        process.env.SPACETRACK
+        process.env.SPACETRACK,
       );
-
+      console.log('RSO #1');
       // 2. get plain texts from spacetrack.
       const rsoParamsPlainText = await httpRequestHandler.getContentsRequest(
         `${this.#SPACETRACK_URI}/${this.#QUERY_URI}`,
-        loginCookie
+        loginCookie,
       );
 
+      console.log('RSO #2');
       // 3. parse tleplaintexts
       const rsoJson = RsoHandler.parseRsoXml(rsoParamsPlainText);
       const rsoParamsArray = RsoHandler.getRsoParamArrays(rsoJson);
 
+      console.log('RSO #3');
       // 4. update ID-NAME pairs
       await RsosRepository.updateRsoParams(rsoParamsArray);
+      console.log('RSO #4');
     } catch (err) {
       console.log(err);
       if (MODE !== 'TEST') {
         await SendEmailHandler.sendMail(
           '[SPACEMAP] rso-params task 에서 에러가 발생하였습니다.',
-          err
+          err,
         );
       }
     } finally {

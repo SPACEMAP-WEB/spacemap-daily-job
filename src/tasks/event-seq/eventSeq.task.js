@@ -46,7 +46,7 @@ class EventSeqTask {
     const tleEngineDirPath = `${EngineCommand.homeDirectory}${tleFileName}`;
     const todaySameHourDateObj = DateHandler.getDateOfSameHourNextDay(
       dateObj,
-      0
+      0,
     );
     const { year, month, date, hour } =
       DateHandler.getElementsOfDateObj(todaySameHourDateObj);
@@ -55,22 +55,22 @@ class EventSeqTask {
       year,
       month,
       date,
-      hour
+      hour,
     );
 
     try {
       // 1. update prediction window.
       await EventSeqRepository.setPredictionWindow(todaySameHourDateObj);
-
+      console.log('1 end');
       // 2. remove existing eventSeq
       await EventSeqHandler.removeEventSeq();
-
+      console.log('2 end');
       // 3. backup tle
       await EventSeqHandler.backupTle(ppdbFileName, tleFileName);
-
+      console.log('3 end');
       // 4. put prediction command
       await EventSeqHandler.putPredictionCommand(predictionCommandContext);
-
+      console.log('4 end');
       // 5. move tlefile
       await ShellCommand.moveCommand(tleLocalPath, tleEngineDirPath);
 
@@ -81,7 +81,7 @@ class EventSeqTask {
       if (MODE !== 'TEST') {
         await SendEmailHandler.sendMail(
           '[SPACEMAP] eventSeq task 에서 에러가 발생하였습니다.',
-          err
+          err,
         );
       }
     } finally {
