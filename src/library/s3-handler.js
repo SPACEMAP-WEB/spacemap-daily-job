@@ -12,48 +12,6 @@ class S3Handler {
     });
   }
 
-  async uploadTleFile(localTleFilePath, s3FileName) {
-    return new Promise((resolve, reject) => {
-      this.s3.upload(
-        {
-          Bucket: 'spacemap',
-          ACL: 'public-read-write',
-          Key: `tles/${s3FileName}`,
-          Body: fs.createReadStream(localTleFilePath),
-        },
-        {},
-        (err, data) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(data);
-          }
-        },
-      );
-    });
-  }
-
-  async uploadLpdbFile(localLpdbFilePath, s3FileName) {
-    return new Promise((resolve, reject) => {
-      this.s3.upload(
-        {
-          Bucket: 'spacemap',
-          ACL: 'public-read-write',
-          Key: s3FileName,
-          Body: fs.createReadStream(localLpdbFilePath),
-        },
-        {},
-        (err, data) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(data);
-          }
-        },
-      );
-    });
-  }
-
   async uploadFile(localFilePath, s3FileName) {
     return new Promise((resolve, reject) => {
       this.s3.upload(
@@ -83,7 +41,7 @@ class S3Handler {
     );
   }
 
-  async downloadTrajectoryFile(localTrajectoryFilePath, s3FileName) {
+  async downloadFile(localTrajectoryFilePath, s3FileName) {
     return new Promise((resolve, reject) => {
       this.s3.getObject(
         {

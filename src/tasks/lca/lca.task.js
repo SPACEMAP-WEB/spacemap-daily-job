@@ -53,10 +53,7 @@ class LcaTask {
         console.log(`Start task ${taskId}.`);
 
         // 2. Get trajectory file from S3 to remote Input Path (not remote for me).
-        await this.s3handler.downloadTrajectoryFile(
-          remoteInputFilePath,
-          s3InputFileKey,
-        );
+        await this.s3handler.downloadFile(remoteInputFilePath, s3InputFileKey);
 
         // 3. Make LPDB From downloaded trajectory.
         await LcaHandler.createLpdbFile(
@@ -66,10 +63,7 @@ class LcaTask {
         );
 
         // 4. Upload LPDB File On S3.
-        await this.s3handler.uploadLpdbFile(
-          remoteOutputFilePath,
-          s3OutputFileKey,
-        );
+        await this.s3handler.uploadFile(remoteOutputFilePath, s3OutputFileKey);
 
         // 5. Save LPDB File On Database.
         await LpdbRepository.saveLpdbOnDatabase(remoteOutputFilePath, taskId);

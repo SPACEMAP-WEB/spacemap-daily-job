@@ -47,7 +47,7 @@ class TleTask {
     console.log(dateObj);
     this.excuting = true;
     const localTleFilePath = `./public/tles/${dateObj.formatString}.tle`;
-    const s3FileName = `${dateObj.formatString}.tle`;
+    const s3FileName = `tles/${dateObj.formatString}.tle`;
 
     try {
       // 0. Check if today is tle clean day.
@@ -83,7 +83,7 @@ class TleTask {
         console.log(tles);
       } else {
         // 6. save TleFile on S3
-        await this.s3Handler.uploadTleFile(localTleFilePath, s3FileName);
+        await this.s3Handler.uploadFile(localTleFilePath, s3FileName);
 
         // 7. save TleModels on DB
         await TleRepository.saveTleModelsOnDB(tles);
