@@ -10,13 +10,13 @@ class WcdbService {
       encoding: 'utf-8',
     });
     const createdAtObj = DateHandler.getDateOfToday();
-    const lpdbRawModelArray = await PpdbHandler.getPpdbModelArray(
+    const wcdbRawModelArray = await PpdbHandler.getPpdbModelArray(
       createdAtObj,
       wcdbFilePlainTexts,
     );
 
     const wcdbModelArray = await Promise.all(
-      lpdbRawModelArray.map(async (wcdb) => {
+      wcdbRawModelArray.map(async (wcdb) => {
         wcdb.placeId = placeId;
         wcdb.pName = 'Site';
         return wcdb;

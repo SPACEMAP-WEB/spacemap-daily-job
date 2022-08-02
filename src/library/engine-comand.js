@@ -40,6 +40,28 @@ class EngineCommand {
   static getWatcherCatcherCommand(paramFilePath) {
     return `${this.engine} ${this.predictionCommand} INTERFERENCE 0 ${this.maximumCores} ${paramFilePath}`;
   }
+
+  static getCandidatedPathsCommand(
+    firstLine,
+    secondLine,
+    predictionEpochTime,
+    startMomentOfCola,
+    endMomentOfCola,
+    amountOfLevel,
+    numberOfPaths,
+    filePrefix,
+  ) {
+    return `python3 spacemap-assistant-tool/tle2offset_path.py "${firstLine}" "${secondLine}" ${predictionEpochTime} ${startMomentOfCola} ${endMomentOfCola} ${amountOfLevel} ${numberOfPaths} ${filePrefix}`;
+  }
+
+  static getCollisionAvoidanceCommand(
+    inputFileListPath,
+    outputFilePath,
+    threshold,
+  ) {
+    return `${this.engine}   ${this.predictionCommand} PHANPROP2 0 ${this.maximumCores} ${threshold} ${inputFileListPath} ${outputFilePath}`;
+    // "args": ["Prediction_Command.txt", "PHANPROP2", "0", "256", "100", "/data/COOP/launchTrajectory/trajectory.lst", "output_launch_trajectory_NEW_ORBITTOOLS.txt"],
+  }
 }
 
 module.exports = EngineCommand;

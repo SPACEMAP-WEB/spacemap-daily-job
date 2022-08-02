@@ -7,7 +7,7 @@ class EventSeqRepository {
     await PredictionWindow.findByIdAndUpdate(
       '6287a167652f57b94bcb2977',
       { startMoment },
-      options
+      options,
     );
   }
 
@@ -16,7 +16,7 @@ class EventSeqRepository {
     await PredictionWindow.findByIdAndUpdate(
       '6287a167652f57b94bcb2977',
       { endMoment },
-      options
+      options,
     );
   }
 
@@ -24,7 +24,7 @@ class EventSeqRepository {
     await this.#deletePredictionWindow();
     const endMoment = DateHandler.getDateOfSameHourNextDay(
       dateObj,
-      2
+      2,
     ).obj.toISOString();
     const startMoment = dateObj.obj.toISOString();
     await this.#setMomentsOfPredictionWindow(startMoment, endMoment);
@@ -56,7 +56,7 @@ class EventSeqRepository {
     return DateHandler.isValidLaunchEpochTime(
       launchEpochTime,
       startMoment,
-      endMoment
+      endMoment,
     );
   }
 

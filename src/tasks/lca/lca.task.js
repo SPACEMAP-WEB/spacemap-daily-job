@@ -55,20 +55,20 @@ class LcaTask {
         // 2. Get trajectory file from S3 to remote Input Path (not remote for me).
         await this.s3handler.downloadTrajectoryFile(
           remoteInputFilePath,
-          s3InputFileKey
+          s3InputFileKey,
         );
 
         // 3. Make LPDB From downloaded trajectory.
         await LcaHandler.createLpdbFile(
           remoteInputFilePath,
           remoteOutputFilePath,
-          threshold
+          threshold,
         );
 
         // 4. Upload LPDB File On S3.
         await this.s3handler.uploadLpdbFile(
           remoteOutputFilePath,
-          s3OutputFileKey
+          s3OutputFileKey,
         );
 
         // 5. Save LPDB File On Database.
@@ -84,7 +84,7 @@ class LcaTask {
         if (MODE !== 'TEST') {
           await SendEmailHandler.sendMail(
             '[SPACEMAP] lpdb task 에서 에러가 발생하였습니다.',
-            err
+            err,
           );
         }
       }

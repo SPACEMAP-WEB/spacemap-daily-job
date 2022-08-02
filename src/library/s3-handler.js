@@ -28,7 +28,7 @@ class S3Handler {
           } else {
             resolve(data);
           }
-        }
+        },
       );
     });
   }
@@ -49,9 +49,38 @@ class S3Handler {
           } else {
             resolve(data);
           }
-        }
+        },
       );
     });
+  }
+
+  async uploadFile(localFilePath, s3FileName) {
+    return new Promise((resolve, reject) => {
+      this.s3.upload(
+        {
+          Bucket: 'spacemap',
+          ACL: 'public-read-write',
+          Key: s3FileName,
+          Body: fs.createReadStream(localFilePath),
+        },
+        {},
+        (err, data) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        },
+      );
+    });
+  }
+
+  async uploadFiles(localFilePaths, s3FileNames) {
+    return Promise.all(
+      localFilePaths.map(async (_, index) => {
+        return this.uploadFile(localFilePaths[index], s3FileNames[index]);
+      }),
+    );
   }
 
   async downloadTrajectoryFile(localTrajectoryFilePath, s3FileName) {
@@ -72,7 +101,7 @@ class S3Handler {
             await asyncWriteFile(localTrajectoryFilePath, data.Body.toString());
             resolve();
           }
-        }
+        },
       );
     });
   }

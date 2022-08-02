@@ -88,7 +88,7 @@ class WatcherCatcherRepository {
     remoteInputFilePath,
     remoteOutputFilePath,
     threshold,
-    localOutputPath
+    localOutputPath,
   ) {
     const task = {
       taskId,
@@ -110,14 +110,14 @@ class WatcherCatcherRepository {
   static async updateTaskStatusSuceess(taskId, wcdbFilePath) {
     return WatcherCatcherModel.findOneAndUpdate(
       { _id: mongoose.Types.ObjectId(taskId) },
-      { status: 'DONE', wcdbFilePath }
+      { status: 'DONE', wcdbFilePath },
     );
   }
 
   static async updateTaskStatusFailed(taskId, errorMessage) {
     const result = await WatcherCatcherModel.findOneAndUpdate(
       { _id: mongoose.Types.ObjectId(taskId) },
-      { status: 'ERROR', errorMessage }
+      { status: 'ERROR', errorMessage },
     );
   }
 }

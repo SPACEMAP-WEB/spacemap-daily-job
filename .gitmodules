@@ -1,0 +1,3 @@
+[submodule "spacemap-assistant-tool"]
+	path = spacemap-assistant-tool
+	url = https://github.com/SPACEMAP-WEB/spacemap-assistant-tool.git

@@ -37,7 +37,7 @@ class PpdbTask {
       // 1. parse ppdb file and get array of ppdb model.
       const ppdbModelArray = await PpdbHandler.getPpdbModelArray(
         dateObj,
-        ppdbPlainTexts
+        ppdbPlainTexts,
       );
 
       if (MODE === 'TEST') {
@@ -52,7 +52,7 @@ class PpdbTask {
       if (MODE !== 'TEST') {
         await SendEmailHandler.sendMail(
           '[SPACEMAP] ppdb task 에서 에러가 발생하였습니다.',
-          err
+          err,
         );
       }
     } finally {

@@ -42,13 +42,13 @@ class PpdbRepository {
       await this.#deleteAllPpdb();
 
       const chunkedPpdbModelArray = await this.#splitArrayIntoEqualChunks(
-        ppdbModelArray
+        ppdbModelArray,
       );
       const resultArray = await Promise.all(
         chunkedPpdbModelArray.map(async (ppdbArray) => {
           const res = await PpdbModel.insertMany(ppdbArray);
           return res ? res.length : 0;
-        })
+        }),
       );
       const insertedCount = resultArray.reduce((sum, e) => sum + e, 0);
       if (insertedCount !== ppdbModelArray.length) {
