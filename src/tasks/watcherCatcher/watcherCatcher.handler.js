@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const moment = require('moment');
 const fs = require('fs');
 const path = require('path');
@@ -71,18 +72,6 @@ class WatcherCatcherHandler {
     const cameraAngle = fieldOfView;
     const timeIncrement = 10; // sec
     return `${remoteInputFilePath} ${juliaPath} ${year} ${month} ${date} ${hours} ${minutes} ${seconds} ${watchWindowLength} 0 ${altitude} ${inteferenceRadius} ${cameraAngle} ${timeIncrement} ${x} ${y} ${z} ${remoteOutputFilePath}`;
-  }
-
-  static makeFilePath(email) {
-    const uniqueSuffix = `${moment().format('YYYY-MM-DD-hh:mm:ss')}`;
-    const filename = `${email}-WC-${uniqueSuffix}.txt`;
-    const remoteFolder = `${EngineCommand.homeDirectory}${email}/`;
-    return {
-      remoteFolder,
-      remoteInputFilePath: `${remoteFolder}${filename}`,
-      remoteOutputFilePath: `${remoteFolder}out_${filename}`,
-      localOutputPath: `public/uploads/out_${filename}`,
-    };
   }
 
   static async createdWcdbFile(remoteInputFilePath) {
