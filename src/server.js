@@ -23,7 +23,7 @@ const main = async () => {
   const eventSeqTask = new EventSeqTask();
   const ppdbTask = new PpdbTask();
   const lcaTask = new LcaTask(s3Handler);
-  const watcherCatcherTask = new WatcherCatcherTask();
+  const watcherCatcherTask = new WatcherCatcherTask(s3Handler);
   const collisionAvoidanceTask = new CollisionAvoidanceTask(s3Handler);
 
   if (instanceName === 'spacemap-daily-tasks') {

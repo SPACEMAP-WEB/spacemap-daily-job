@@ -1,13 +1,12 @@
 /* eslint-disable no-console */
-// eslint-disable-next-line no-unused-vars
 
 const osu = require('node-os-utils');
 const { Mutex } = require('async-mutex');
 const frequencies = require('../tasks-schedules');
 const { SendEmailHandler } = require('../../library');
-const LcaHandler = require('./lca.handler');
-const LpdbRepository = require('./lpdb.repository');
 const LcaRepository = require('./lca.repository');
+const LpdbRepository = require('./lpdb.repository');
+const LcaHandler = require('./lca.handler');
 
 class LcaTask {
   /**
@@ -41,7 +40,6 @@ class LcaTask {
         if (!task) {
           return;
         }
-
         taskId = task.taskId;
         const {
           s3InputFileKey,
@@ -50,13 +48,10 @@ class LcaTask {
           threshold,
           s3OutputFileKey,
         } = task;
-        console.log(`Start task ${taskId}.`);
+        console.log(`Start LCA Task ${taskId}.`);
 
         // 2. Get trajectory file from S3 to remote Input Path (not remote for me).
-        await this.s3handler.downloadTrajectoryFile(
-          remoteInputFilePath,
-          s3InputFileKey,
-        );
+        await this.s3handler.downloadFile(remoteInputFilePath, s3InputFileKey);
 
         // 3. Make LPDB From downloaded trajectory.
         await LcaHandler.createLpdbFile(
@@ -66,24 +61,20 @@ class LcaTask {
         );
 
         // 4. Upload LPDB File On S3.
-        await this.s3handler.uploadLpdbFile(
-          remoteOutputFilePath,
-          s3OutputFileKey,
-        );
+        await this.s3handler.uploadFile(remoteOutputFilePath, s3OutputFileKey);
 
         // 5. Save LPDB File On Database.
         await LpdbRepository.saveLpdbOnDatabase(remoteOutputFilePath, taskId);
 
         // 6. Update Task object status to success.
         await LcaRepository.updateTaskStatusSuceess(taskId, s3OutputFileKey);
-        console.log(`Task ${task.taskId} has successfully done.`);
+        console.log(`Task ${taskId} has successfully done.`);
       } catch (err) {
-        console.log(err);
-        // 7. If error occured, Update Task object status to fail.
+        console.log(`Task ${taskId} has not done : ${err}`);
         await LcaRepository.updateTaskStatusFailed(taskId, err);
         if (MODE !== 'TEST') {
           await SendEmailHandler.sendMail(
-            '[SPACEMAP] lpdb task 에서 에러가 발생하였습니다.',
+            '[SPACEMAP] lca task 에서 에러가 발생하였습니다.',
             err,
           );
         }

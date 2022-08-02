@@ -1,23 +1,26 @@
-/* eslint-disable class-methods-use-this */
 /* eslint-disable no-console */
-// eslint-disable-next-line no-unused-vars
 
 const osu = require('node-os-utils');
 const { Mutex } = require('async-mutex');
 const frequencies = require('../tasks-schedules');
+const { SendEmailHandler } = require('../../library');
 const WatcherCatcherRepository = require('./watcherCatcher.repository');
 const WcdbRepository = require('./wcdb.repository');
 const WatcherCatcherHandler = require('./watcherCatcher.handler');
 
 class WatcherCatcherTask {
-  constructor() {
+  /**
+   * @param {S3Handler} s3handler
+   */
+  constructor(s3handler) {
     this.name = 'WC TASK';
     this.frequency = frequencies.watcherCatcherFrequency;
     this.mutex = new Mutex();
     this.handler = this.#watcherCatcherScheduleHandler.bind(this);
+    this.s3handler = s3handler;
   }
 
-  async #watcherCatcherScheduleHandler() {
+  async #watcherCatcherScheduleHandler(MODE) {
     let taskId = 0;
     await this.mutex.runExclusive(async () => {
       try {
@@ -38,8 +41,9 @@ class WatcherCatcherTask {
           return;
         }
         taskId = task.taskId;
-        const { remoteInputFilePath, remoteOutputFilePath } = task;
-        console.log(`end 1: ${taskId}`);
+        const { remoteInputFilePath, remoteOutputFilePath, s3OutputFileKey } =
+          task;
+        console.log(`Start WC Task: ${taskId}`);
 
         // 2. Write parameters file into working directory.
         const parameters =
@@ -55,16 +59,25 @@ class WatcherCatcherTask {
         // 3. Make WCDB from parameters file
         await WatcherCatcherHandler.createdWcdbFile(remoteInputFilePath);
 
-        // 4. Update WCDB
+        // 4. Upload WCDB File On S3.
+        await this.s3handler.uploadFile(remoteOutputFilePath, s3OutputFileKey);
+
+        // 5. Update WCDB
         await WcdbRepository.saveWcdbOnDatabase(remoteOutputFilePath, taskId);
         await WatcherCatcherRepository.updateTaskStatusSuceess(
           taskId,
-          remoteOutputFilePath,
+          s3OutputFileKey,
         );
         console.log(`Task ${taskId} has Successfully Done.`);
       } catch (err) {
         console.log(`Task ${taskId} has not done : ${err}`);
         await WatcherCatcherRepository.updateTaskStatusFailed(taskId, err);
+        if (MODE !== 'TEST') {
+          await SendEmailHandler.sendMail(
+            '[SPACEMAP] wc task 에서 에러가 발생하였습니다.',
+            err,
+          );
+        }
       }
     });
   }

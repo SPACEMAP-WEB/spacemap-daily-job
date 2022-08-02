@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-console */
-// const CollisionAvoidanceModel = require('./collisionAvoidance.model');
 const { default: mongoose } = require('mongoose');
 const {
   CollisionAvoidanceModel,
@@ -71,10 +70,14 @@ class CollisionAvoidanceRepository {
   }
 
   static async updateTaskStatusFailed(taskId, errorMessage) {
-    const result = await CollisionAvoidanceModel.findOneAndUpdate(
-      { _id: mongoose.Types.ObjectId(taskId) },
-      { status: 'ERROR', errorMessage },
-    );
+    if (taskId !== 0) {
+      return CollisionAvoidanceModel.findOneAndUpdate(
+        { _id: mongoose.Types.ObjectId(taskId) },
+        { status: 'ERROR', errorMessage },
+      );
+    }
+    return undefined;
   }
 }
+
 module.exports = CollisionAvoidanceRepository;
