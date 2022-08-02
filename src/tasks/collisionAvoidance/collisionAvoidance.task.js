@@ -63,13 +63,6 @@ class CollisionAvoidanceTask {
           parameters,
           remoteInputFilePrefix,
         );
-        // a) get tle of primary RSO from platform-api (output: tle of primary RSO)
-        // b) make original path of primary RSO
-        //  (input:  tle, prameters)
-        //  (output: trajectory of original primary RSO & write in local)
-        // c) make candidates path
-        //  (input:  original path)
-        //  (output: offset trajectories)
 
         // 4. Make COLADB from parameters file
         await CollisionAvoidanceHandler.createdColadbFile(
@@ -77,7 +70,6 @@ class CollisionAvoidanceTask {
           remoteOutputFilePath,
           parameters.threshold,
         );
-        // Complete
 
         // 5-1. Upload trajectory files on s3.
         const s3urls = await this.s3handler.uploadFiles(

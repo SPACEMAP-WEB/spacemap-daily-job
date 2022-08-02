@@ -23,8 +23,9 @@ class ColadbService {
     const coladbModelArray = await Promise.all(
       coladbRawModelArray
         .filter(
-          /* eslint-disable-next-line eqeqeq */
-          (coladb) => coladb.sid != originalPid && coladb.sid != originalSid,
+          (coladb) =>
+            Number(coladb.sid) !== Number(originalPid) &&
+            Number(coladb.sid) !== Number(originalSid),
         )
         .map(async (coladb) => {
           coladb.placeId = placeId;
